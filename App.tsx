@@ -9,6 +9,7 @@
  */
 
 import React from 'react';
+import { ReviewPage } from './src/View/Review';
 // import {
 //   Alert,
 //   Button,
@@ -19,11 +20,12 @@ import ConnectController from './src/ViewController/ConnectController';
 const App = () => {
  
   return (
-    <ConnectController/>
+  //  <ConnectController/>
     // <SafeAreaView>
     //   <Button title="press"
     //   onPress={()=> {Alert.alert("works"); console.log("log")}}/> 
     // </SafeAreaView>
+    <ReviewPage/>
   );
 };
 

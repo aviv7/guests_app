@@ -19,16 +19,17 @@ export const MainPageViewController = observer(() => {
 		//  });
 		// }
 
-		// if (Platform.OS === 'android') {
-		// 	await PermissionsAndroid.request(
-		// 		PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-		// 	);
-		// }
+		if (Platform.OS === 'android') {
+			await PermissionsAndroid.request(
+				PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+			);
+		}
 
-		return PermissionsAndroid.request(
-			PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-		);
+		// return await PermissionsAndroid.request(
+		// 	PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+		// );
 	}
+	// @TODO: Fix location permission request
 	//future signature - SendOrderToServer(items: Map<string, Number>)
 	async function SendOrderToServer() {
 		let itemID1 = itemViewModel.getItems()[0].id;
@@ -36,8 +37,8 @@ export const MainPageViewController = observer(() => {
 		let items = {[itemID1]: 2};
 
 		requestPermissions()
-			.then(response => {
-				if (response === PermissionsAndroid.RESULTS.GRANTED) {
+			.then(_ => {
+			//	if (response === PermissionsAndroid.RESULTS.GRANTED) {
 					orderViewModel
 						.createOrder(items)
 						.then(createdOrder => {
@@ -53,11 +54,8 @@ export const MainPageViewController = observer(() => {
 									err.response.data
 							)
 						);
-				} else {
-					Alert.alert('Please Approve using location');
-				}
 			})
-			.catch(err => Alert.alert(err));
+			.catch(_ => Alert.alert('Please Approve using location'));
 	}
 
 	function startWaitingForOrder() {
