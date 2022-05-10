@@ -37,8 +37,9 @@ export default class ConnectionViewModel {
 			this.items.syncItems(),
 			new Promise<void>((resolve, reject) => {
 				if (this.model.token) {
-					this.connectionHandler.connect(this.model.token, () =>
-						resolve()
+					this.connectionHandler.connect(this.model.token, 
+						() => {resolve();},
+						() => {reject('Could not connect to server');}
 					);
 				} else {
 					console.log('no token found');

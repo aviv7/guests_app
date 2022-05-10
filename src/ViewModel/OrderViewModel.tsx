@@ -1,6 +1,6 @@
-import Requests from 'guests_app/src/Networking/requests';
-import Location, {Order, OrderID, OrderStatus} from 'guests_app/src/types';
 import {OrderModel} from '../Model/OrderModel';
+import Requests from '../Networking/requests';
+import Location, { Order, OrderID, OrderStatus } from '../types';
 
 export default class OrderViewModel {
 	private order_model;
@@ -51,20 +51,11 @@ export default class OrderViewModel {
 	cancelOrder(): Promise<void> {
 		const order = this.getOrder();
 		if (order != null) {
-			return this.requests.cancelOrderGuest(order.id).then(() => {
-				this.order_model.order = null;
-			});
-		}
-		return new Promise((_resolve, reject) =>
-			reject("cancelOrder called when order doesn't exists")
-		);
-	}
-
-	submitReview(deatils: string, rating: Number): Promise<void> {
-		const order = this.getOrder();
-		if (order != null) {
-			if (order.status === 'delivered') {
-				return this.requests.submitReview(order.id, deatils, rating);
+			if(order.status === 'received')
+			{
+				return this.requests.cancelOrderGuest(order.id).then(() => {
+					this.order_model.removeOrder();
+				});
 			}
 			return new Promise((_resolve, reject) =>
 				reject("cancelOrder called when order status isn't received")
@@ -75,7 +66,23 @@ export default class OrderViewModel {
 		);
 	}
 
-	updateOrderStatus(orderID: OrderID, status: OrderStatus): void {
+	submitReview(deatils: string, rating: Number): Promise<void> {
+		const order = this.getOrder();
+		if (order != null) {
+			if (order.status === 'delivered') {
+				return this.requests.submitReview(order.id, deatils, rating)
+				.finally(() => this.order_model.removeOrder());
+			}
+			return new Promise((_resolve, reject) =>
+				reject("submitReview called when order status isn't delivered")
+			);
+		}
+		return new Promise((_resolve, reject) =>
+			reject("submitReview called when order doesn't exists")
+		);
+	}
+
+	updateOrderStatus(orderID: OrderID, status: OrderStatus): void {		
 		this.order_model.updateOrderStatus(orderID, status);
 	}
 

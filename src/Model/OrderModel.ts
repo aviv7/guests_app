@@ -25,7 +25,10 @@ export class OrderModel {
 
 	updateOrderStatus(orderID: OrderID, status: OrderStatus) {
 		if (this._order != null && this._order?.id === orderID) {
-			this._order.status = status;
+			if(status !== 'canceled')
+				this._order.status = status;
+			else
+				this.removeOrder();
 		}
 	}
 

@@ -11,9 +11,10 @@ export function isString(someString: any): someString is string {
 	return typeof someString === 'string';
 }
 
-// @TODO: UPDATE FUNCTION
+
 export function isOrderStatus(status: any): status is OrderStatus {
-	const result = ['unassigned', 'inprogress', 'completed'].find(
+	const result = ['received', 'in preparation', 'ready to deliver','assigned','on the way'
+	,'delivered', 'canceled'].find(
 		availableStatus => availableStatus === status
 	);
 	return result !== undefined;

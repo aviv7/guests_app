@@ -24,11 +24,11 @@ export default function LoginView(props: LoginViewProps) {
 			</>
 		);
 	}
-	if (props.loggedIn) {
+	if (props.loggedIn && !props.isConnected) {
 		return (
 			<>
 				<Button
-					title='Retry'
+					title='Reconnect'
 					onPress={props.establishConnection}
 					disabled={props.isLoading}
 				/>

@@ -33,8 +33,9 @@ export const MainPageViewController = observer(() => {
 	//future signature - SendOrderToServer(items: Map<string, Number>)
 	async function SendOrderToServer() {
 		let itemID1 = itemViewModel.getItems()[0].id;
-		console.log('items for order: ', itemViewModel.getItems());
-		let items = {[itemID1]: 2};
+		let itemID2 = itemViewModel.getItems()[1].id;
+		console.log('items available: ', itemViewModel.getItems());
+		let items = {[itemID1]: 2, [itemID2]:1};
 
 		requestPermissions()
 			.then(_ => {
@@ -88,6 +89,7 @@ export const MainPageViewController = observer(() => {
 		<MainPage
 			sendOrderToServer={SendOrderToServer}
 			cancelOrder={CancelOrder}
+			submitReview={(openText: string, rating:number)=> orderViewModel.submitReview(openText,rating)}
 			hasActiveOrder={orderViewModel.hasActiveOrder()}
 			orderID={orderViewModel.getOrderId()}
 			orderStatus={orderViewModel.getOrderStatus()}

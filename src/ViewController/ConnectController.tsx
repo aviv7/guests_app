@@ -19,10 +19,12 @@ const ConnectController = observer((_props: LoginControllerProps) => {
 
 	const establishConnection = () => {
 		setIsLoading(true);
+		connectionViewModel.connection.isReconnecting = true;
 		connectionViewModel
 			.connect()
-			.then(() => setIsConnected(true))
-			.catch(() => Alert.alert("Can't establish connection to server"));
+			.then(() =>{connectionViewModel.connection.isReconnecting = false; setIsConnected(true);})
+			.catch(() => Alert.alert("Can't establish connection to server"))
+			.finally(()=> {setIsLoading(false);});
 	};
 
 	const logIn = (password: string) => {

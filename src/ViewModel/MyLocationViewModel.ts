@@ -14,7 +14,7 @@ const corners: Corners = {
 
 export class MyLocationViewModel {
 	private locationModel;
-	private communicate: Communicate;
+	//private communicate: Communicate;
 	private locationService: LocationService;
 
 	constructor() {
