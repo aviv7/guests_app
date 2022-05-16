@@ -28,7 +28,7 @@ type MyZoomableImageProps = {
 	parentHeight: number;
 	url: string;
 	style?: StyleProp<ViewStyle>;
-	pointOfInterest: PointMarker;
+	pointOfInterest: PointMarker | null;
 };
 const MAX_ZOOM = 3.5;
 

@@ -11,7 +11,7 @@ import ZoomableImageController from '../ViewController/ZoomableImageController';
 
 type MapViewProps = {
 	style?: StyleProp<ViewStyle>;
-	marker: PointMarker;
+	marker: PointMarker | null;
 	onLayout: (event: LayoutChangeEvent) => void;
 	imageHeight: number | undefined;
 	imageWidth: number | undefined;

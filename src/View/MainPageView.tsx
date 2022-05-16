@@ -14,6 +14,7 @@ type MainPageViewProps = {
 	hasActiveOrder: boolean;
 	orderID: OrderID;
 	orderStatus: string;
+	isLocationApproved: boolean;
 };
 //const OrdersListView = observer((props: OrdersViewProps) => {
 
@@ -99,6 +100,7 @@ export const MainPage = observer((props: MainPageViewProps) => {
 		return(
 			<SafeAreaView style={styles.areaView}>		 
 				<Button title='Order' onPress={props.sendOrderToServer} /> 
+				<MapScreenController/>
 			</SafeAreaView>
 		);
 	}

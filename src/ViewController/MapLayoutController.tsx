@@ -7,7 +7,7 @@ import MapView from '../View/MapView';
 
 type MapLayoutProps = {
 	style?: StyleProp<ViewStyle>;
-	marker: PointMarker;
+	marker: PointMarker | null;
 };
 
 export default function MapLayoutController({style, marker}: MapLayoutProps) {

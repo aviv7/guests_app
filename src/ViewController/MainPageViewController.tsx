@@ -19,6 +19,8 @@ export const MainPageViewController = observer(() => {
 	{
 		locationViewModel.stopTracking();
 	}
+	if(!locationViewModel.getLocationApproved())
+		requestPermissions();
 
 	async function requestPermissions() {
 		// if (Platform.OS === 'ios') {
@@ -30,10 +32,11 @@ export const MainPageViewController = observer(() => {
 		// }
 
 		if (Platform.OS === 'android') {
-			await PermissionsAndroid.request(
+			return	await PermissionsAndroid.request(
 				PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-			).then((msg) => console.log("then request msg: " + msg))
-			.catch((err) => console.log("request error: " + err));
+			)
+			// .then((msg) => console.log("then request msg: " + msg))
+			// .catch((err) => console.log("request error: " + err));
 		}
 
 		// return await PermissionsAndroid.request(
@@ -48,8 +51,9 @@ export const MainPageViewController = observer(() => {
 		let items = {[itemID1]: 2, [itemID2]:1};
 
 		requestPermissions()
-			.then(_ => {
-			//	if (response === PermissionsAndroid.RESULTS.GRANTED) {
+			.then((response) => 
+			{
+				if (response === PermissionsAndroid.RESULTS.GRANTED) {
 					orderViewModel
 						.createOrder(items)
 						.then(createdOrder => {
@@ -65,7 +69,8 @@ export const MainPageViewController = observer(() => {
 									err.response.data
 							)
 						);
-			})
+			}
+		})
 			.catch(_ => Alert.alert('Please Approve using location'));
 	}
 
@@ -103,6 +108,7 @@ export const MainPageViewController = observer(() => {
 			hasActiveOrder={orderViewModel.hasActiveOrder()}
 			orderID={orderViewModel.getOrderId()}
 			orderStatus={orderViewModel.getOrderStatus()}
+			isLocationApproved={locationViewModel.getLocationApproved()}
 		/>
 	);
 });

@@ -56,9 +56,16 @@ export class MyLocationViewModel {
 	getLocation(): Location | null {
 		return this.locationModel.location;
 	}
+	getLocationApproved(){
+		return this.locationModel.locationApproved;
+	}
 	
 	approveTrackingLocation() {
 		this.locationModel.locationApproved = true;
+	}
+
+	refuseTrackingLocation(){
+		this.locationModel.locationApproved = false;
 	}
 
 	stopTracking() {
