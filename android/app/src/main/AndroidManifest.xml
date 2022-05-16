@@ -2,6 +2,9 @@
   package="com.guests_app">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- For react-native-geolocation-service: https://github.com/Agontuk/react-native-geolocation-service/blob/HEAD/docs/setup.md -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
       android:name=".MainApplication"

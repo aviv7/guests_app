@@ -22,7 +22,8 @@ export const MainPageViewController = observer(() => {
 		if (Platform.OS === 'android') {
 			await PermissionsAndroid.request(
 				PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-			);
+			).then((msg) => console.log("then request msg: " + msg))
+			.catch((err) => console.log("request error: " + err));
 		}
 
 		// return await PermissionsAndroid.request(
@@ -61,7 +62,7 @@ export const MainPageViewController = observer(() => {
 
 	function startWaitingForOrder() {
 		console.log('start waiting for order');
-		// locationViewModel.startTracking();
+		locationViewModel.startTrackingLocation();
 	}
 	/*  function waitForOrder(_orderID: String){
         // if(interval.current){

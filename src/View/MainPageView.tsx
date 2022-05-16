@@ -39,7 +39,7 @@ export const MainPage = observer((props: MainPageViewProps) => {
 				<View style={styles.separator} />
 					<Modal isVisible={visible}>
 					<Modal.Container>
-						<View style={styles.modal}>
+					`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````e`	<View style={styles.modal}>
 						<Modal.Header title="Rate our service :)" />
 						<Modal.Body>
 						<TapRating
@@ -84,7 +84,7 @@ export const MainPage = observer((props: MainPageViewProps) => {
 							{props.orderStatus === 'received' ? (
 								<Button title='Cancel Order' onPress={props.cancelOrder}/>  
 							) : (
-								<Text > {'\t * cannot cancel order after preparation'} </Text>
+								<Text style={styles.text}> {'\t * cannot cancel order after preparation'} </Text>
 							)}
 						</View>
 					</Row>	

@@ -5,13 +5,14 @@ import OrderViewModel from './ViewModel/OrderViewModel';
 import ItemViewModel from './ViewModel/ItemViewModel';
 import ConnectionViewModel from './ViewModel/ConnectionViewModel';
 import MapViewModel from './ViewModel/MapViewModel';
+import Communicate from './Communication/Communicate';
 
 const requests = new Requests();
 const authentication = new ConnectionViewModel(requests);
 const orders = new OrderViewModel(requests);
 const items = new ItemViewModel(requests);
 const maps = new MapViewModel();
-const myLocationViewModel = new MyLocationViewModel();
+const myLocationViewModel = new MyLocationViewModel(new Communicate());
 
 export const ConnectionContext =
 	createContext<ConnectionViewModel>(authentication);
