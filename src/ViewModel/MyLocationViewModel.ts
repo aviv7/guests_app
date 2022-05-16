@@ -35,8 +35,10 @@ export class MyLocationViewModel {
         this.locationService.watchLocation(
             location => {
                 if (this.isValidLocation(location)) {
-                    this.communicate.updateGuestLocation(location);
-                    this.locationModel.location = location;
+					if(this.tracking){
+						this.communicate.updateGuestLocation(location);
+						this.locationModel.location = location;
+					}
                 } else {
                     console.warn(
                         'An invalid location has been received from the location service',
@@ -60,7 +62,8 @@ export class MyLocationViewModel {
 	}
 
 	stopTracking() {
+		console.log("stopped tracking location")
 		this.tracking = false;
-		this.locationService.stopWatching();
+		//this.locationService.stopWatching();
 	}
 }

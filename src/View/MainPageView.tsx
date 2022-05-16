@@ -39,7 +39,7 @@ export const MainPage = observer((props: MainPageViewProps) => {
 				<View style={styles.separator} />
 					<Modal isVisible={visible}>
 					<Modal.Container>
-					`````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````e`	<View style={styles.modal}>
+						<View style={styles.modal}>
 						<Modal.Header title="Rate our service :)" />
 						<Modal.Body>
 						<TapRating
@@ -66,7 +66,6 @@ export const MainPage = observer((props: MainPageViewProps) => {
 				</View>);
 		}
 		return (
-			
 			<SafeAreaView style={styles.areaView}>
 				<Grid>
 					<Row size={10}>			
@@ -89,7 +88,6 @@ export const MainPage = observer((props: MainPageViewProps) => {
 						</View>
 					</Row>	
 					<Row size={10}></Row>
-
 					<Row size={70}>
 					<MapScreenController/>
 					</Row>

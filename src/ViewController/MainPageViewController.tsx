@@ -9,6 +9,16 @@ export const MainPageViewController = observer(() => {
 	const orderViewModel = useContext(OrdersContext);
 	const itemViewModel = useContext(itemsContext);
 	const locationViewModel = useContext(MyLocationContext);
+	
+	if(orderViewModel.hasActiveOrder())
+	{
+		Alert.alert("You have an active order!\nplease stay in your place");
+		startWaitingForOrder()
+	}
+	else
+	{
+		locationViewModel.stopTracking();
+	}
 
 	async function requestPermissions() {
 		// if (Platform.OS === 'ios') {
@@ -30,7 +40,6 @@ export const MainPageViewController = observer(() => {
 		// 	PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
 		// );
 	}
-	// @TODO: Fix location permission request
 	//future signature - SendOrderToServer(items: Map<string, Number>)
 	async function SendOrderToServer() {
 		let itemID1 = itemViewModel.getItems()[0].id;
