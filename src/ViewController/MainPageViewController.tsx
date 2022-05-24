@@ -19,7 +19,7 @@ export const MainPageViewController = observer(() => {
 	{
 		locationViewModel.stopTracking();
 	}
-	if(!locationViewModel.getLocationApproved())
+	if(!locationViewModel.getIsLocationApproved())
 		requestPermissions();
 
 	async function requestPermissions() {
@@ -108,7 +108,7 @@ export const MainPageViewController = observer(() => {
 			hasActiveOrder={orderViewModel.hasActiveOrder()}
 			orderID={orderViewModel.getOrderId()}
 			orderStatus={orderViewModel.getOrderStatus()}
-			isLocationApproved={locationViewModel.getLocationApproved()}
+			isLocationApproved={locationViewModel.getIsLocationApproved()}
 		/>
 	);
 });

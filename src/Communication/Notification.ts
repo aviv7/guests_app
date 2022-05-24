@@ -32,7 +32,6 @@ export default class Notifications {
 	}
 
 	private changeOrderStatus(params: Params): void {
-		console.log("ORDER STATUS CHANGE NOTIFICATION!!!")
 		const orderID =params.orderID;
 		const orderStatus = params.orderStatus;
 

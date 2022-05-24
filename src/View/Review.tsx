@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
-import { Rating } from "react-native-ratings";
 import TapRating from "react-native-ratings/dist/TapRating";
 import { Modal } from "../Components/Modal";
 

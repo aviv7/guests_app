@@ -9,6 +9,7 @@
  */
 
 import React from 'react';
+import MapScreenView from './src/View/MapScreenView';
 import { ReviewPage } from './src/View/Review';
 // import {
 //   Alert,
@@ -16,12 +17,16 @@ import { ReviewPage } from './src/View/Review';
 //   SafeAreaView,
 // } from 'react-native';
 import ConnectController from './src/ViewController/ConnectController';
+import MapScreenController from './src/ViewController/MapScreenController';
+import OrderController from './src/ViewController/OrderController';
 
 const App = () => {
  
   return (
+    // <MapScreenController />
     <ConnectController/>
-    // <SafeAreaView>
+
+   // <SafeAreaView>
     //   <Button title="press"
     //   onPress={()=> {Alert.alert("works"); console.log("log")}}/> 
     // </SafeAreaView>

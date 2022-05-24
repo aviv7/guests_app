@@ -25,10 +25,9 @@ export default function MapLayoutController({style, marker}: MapLayoutProps) {
 	});
 
 	const onLayout = (event: LayoutChangeEvent) => {
-		// TO FIX 
-		// const {height, width} = event.nativeEvent.layout;
-		setHeight(200);
-		setWidth(200);
+		const {height: newHeight, width: newWidth} = event.nativeEvent.layout;
+		setHeight(newHeight);
+		setWidth(newWidth);
 	};
 
 	const props = {

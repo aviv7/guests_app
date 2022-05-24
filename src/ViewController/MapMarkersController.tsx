@@ -17,10 +17,9 @@ type MapMarkerControllerProps = {
 function createGuestMarker(myLocation: Location | null): PointMarker | null {
 	console.log("guest location marker: ", myLocation)
 	if(myLocation != null)
-	//	return {point:{name: 'Personal', location: new Location(0.5,0.5)}, marker: WaiterMarker} 
 		return {point:{name: 'Personal', location: myLocation}, marker: WaiterMarker} 
 	else
-		return null;
+		return {point:{name: 'Personal', location: new Location(0.5,0.5)}, marker: WaiterMarker};
 }
 
 const MapMarkersController = observer(({style}: MapMarkerControllerProps) => {

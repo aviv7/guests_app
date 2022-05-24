@@ -97,6 +97,12 @@ export default class OrderViewModel {
 	getOrder() {
 		return this.order_model.order;
 	}
+	getOrderItems(){
+		if(this.hasActiveOrder())
+		{
+			return this.getOrder()?.items;
+		}
+	}
 	hasActiveOrder(): boolean {
 		return this.order_model.hasActiveOrder();
 	}
