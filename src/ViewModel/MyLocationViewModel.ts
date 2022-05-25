@@ -20,7 +20,7 @@ export class MyLocationViewModel {
 	private tracking: boolean;
 
 	constructor(communication: Communicate) {
-		this.locationModel = new MyLocationModel();
+		this.locationModel = MyLocationModel.getInstance();
 		this.locationService = new Geolocation(corners);
 		this.communicate = communication;
 		this.tracking = false;
@@ -53,7 +53,7 @@ export class MyLocationViewModel {
     //     );
     // }
 
-	public getLocationPoint(){
+	public getLocationPoint() {
 		this.locationService.getLocation(
 			location => {
 				if (!location) {
@@ -62,12 +62,7 @@ export class MyLocationViewModel {
 					this.locationModel.location = null;
 				} 
 				else if (this.isValidLocation(location)) {
-					if(this.tracking)
-					{
-						this.communicate.updateGuestLocation(location);
-					}
 					this.locationModel.location = location;
-				//	console.log("valid location in get", location)
 				} else {
 					this.locationModel.location = null;
 				}
@@ -177,9 +172,6 @@ export class MyLocationViewModel {
 	}
 
 	stopTracking() {
-		console.log("stopped tracking location")
 		this.tracking = false;
-		this.locationModel.location = null;
-		//this.locationService.stopWatching();
 	}
 }

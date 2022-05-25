@@ -81,7 +81,7 @@ function MapScreenController(): JSX.Element {
 		<MapScreenView
 			refBottomSheet={refBottomSheet}
 			openBottomSheet={openBottomSheet}
-			onOrdersClose={() => console.log("order tab closed")}
+		//	onOrdersClose={() => console.log("order tab closed")}
 		/>
 	);
 }

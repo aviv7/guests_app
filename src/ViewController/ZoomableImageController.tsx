@@ -28,7 +28,7 @@ type MyZoomableImageProps = {
 	parentHeight: number;
 	url: string;
 	style?: StyleProp<ViewStyle>;
-	pointOfInterest: PointMarker | null;
+	pointsOfInterest: PointMarker[];
 };
 const MAX_ZOOM = 3.5;
 
@@ -39,7 +39,7 @@ export default function MyZoomableImage({
 	parentHeight,
 	style,
 	url,
-	pointOfInterest,
+	pointsOfInterest,
 }: MyZoomableImageProps) {
 	const [top, setTop] = useState<number>(0);
 	const [left, setLeft] = useState<number>(0);
@@ -169,7 +169,7 @@ export default function MyZoomableImage({
 	const props = {
 		style,
 		panHandlers: panResponder.panHandlers,
-		pointOfInterest,
+		pointsOfInterest,
 		imageURL: url,
 		zoom,
 		imageHeight,

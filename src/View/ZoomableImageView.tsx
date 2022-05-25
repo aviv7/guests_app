@@ -14,7 +14,7 @@ type MyZoomableImageProps = {
 	imageHeight: number;
 	imageURL: string;
 	style?: StyleProp<ViewStyle>;
-	pointOfInterest: PointMarker | null;
+	pointsOfInterest: PointMarker[];
 	zoom: number;
 	top: number;
 	left: number;
@@ -43,7 +43,7 @@ export default function MyZoomableImage(props: MyZoomableImageProps) {
 		<View style={props.style} {...props.panHandlers}>
 			<View style={styles.container}>	
 				
-			{props.pointOfInterest !== null && (
+			{/* {props.pointOfInterest !== null && (
 				<View
 					style={[
 						styles.marker,
@@ -60,7 +60,32 @@ export default function MyZoomableImage(props: MyZoomableImageProps) {
 					]}>
 					<props.pointOfInterest.marker name={props.pointOfInterest.point.name} scale={props.zoom} />
 				</View> 
-			)}
+			)} */}
+
+			{props.pointsOfInterest.map((pointAndMarker, index) => {
+					const point = pointAndMarker.point;
+					const PointMarker = pointAndMarker.marker;
+					return (
+						<View
+							key={index}
+							style={[
+								styles.marker,
+								{
+									top:
+										point.location.y *
+										props.imageHeight *
+										props.zoom,
+									left:
+										point.location.x *
+										props.imageWidth *
+										props.zoom,
+								},
+							]}>
+							<PointMarker name={point.name} scale={props.zoom} />
+						</View>
+					);
+				})}
+
 			<Image
 				style={styles.map}
 				source={{

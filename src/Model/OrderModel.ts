@@ -61,4 +61,8 @@ export class OrderModel {
 	set order(order: Order | null) {
 		this._order = order;
 	}
+
+	get waiters(){
+		return this._waiters;
+	}
 }

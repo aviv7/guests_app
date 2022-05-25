@@ -114,7 +114,7 @@ import OrderController from '../ViewController/OrderController';
 type MapScreenViewProps = {
 	openBottomSheet: () => void;
 	refBottomSheet: LegacyRef<RBSheet> | undefined;
-	onOrdersClose: () => void;
+//	onOrdersClose: () => void;
 };
 export default function MapScreenView(props: MapScreenViewProps): JSX.Element {
 	return (
@@ -141,7 +141,7 @@ export default function MapScreenView(props: MapScreenViewProps): JSX.Element {
 			</TouchableOpacity>
 			<RBSheet
 				ref={props.refBottomSheet}
-				onClose={props.onOrdersClose}
+			//	onClose={props.onOrdersClose}
 				closeOnDragDown={true}
 				closeOnPressMask={false}
 				dragFromTopOnly={false}

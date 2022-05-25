@@ -16,19 +16,18 @@ export default class Notifications {
 	}
 
 	private waiterLocationUpdate(params: Params): void {
-		console.log("Waiter location update NOTIFICATION!!!")
-		// const waiterID = params.waiterID;
-		// const waiterLocation = params.waiterLocation;
+		const waiterID = params.waiterID;
+		const waiterLocation = params.waiterLocation;
 		
-		// if (isString(waiterID) && isLocation(waiterLocation)) {
-		// 	this.orders.updateWaiterLocation(waiterID, waiterLocation);
-		// 	return;
-		// }
-		// else{
-		// 	console.warn(
-		// 		`In the event, "waiterLocationUpdate", parameters ${params} are not in the right format`
-		// 	);
-		// }
+		if (isString(waiterID) && isLocation(waiterLocation)) {
+			this.orders.updateWaiterLocation(waiterID, waiterLocation);
+			return;
+		}
+		else{
+			console.warn(
+				`In the event, "waiterLocationUpdate", parameters ${params} are not in the right format`
+			);
+		}
 	}
 
 	private changeOrderStatus(params: Params): void {

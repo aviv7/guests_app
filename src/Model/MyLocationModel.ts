@@ -7,11 +7,18 @@ export class MyLocationModel {
 	private _hasAskedLocationAtStart: boolean;
 
 
-	public constructor() {
-		makeAutoObservable(this);
+	private constructor() {
 		this._location = null;
 		this._locationApproved = false;
 		this._hasAskedLocationAtStart = false;
+		makeAutoObservable(this);
+	}
+	static instance?: MyLocationModel;
+	static getInstance(): MyLocationModel {
+		if (!this.instance) {
+			this.instance = new MyLocationModel();
+		}
+		return this.instance;
 	}
 
 	get location() {

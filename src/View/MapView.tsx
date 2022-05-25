@@ -11,7 +11,7 @@ import ZoomableImageController from '../ViewController/ZoomableImageController';
 
 type MapViewProps = {
 	style?: StyleProp<ViewStyle>;
-	marker: PointMarker | null;
+	markers: PointMarker[];
 	onLayout: (event: LayoutChangeEvent) => void;
 	imageHeight: number | undefined;
 	imageWidth: number | undefined;
@@ -32,7 +32,7 @@ export default function MapView(props: MapViewProps) {
 						imageHeight={props.imageHeight}
 						imageWidth={props.imageWidth}
 						url={props.imageURL}
-						pointOfInterest={props.marker}
+						pointsOfInterest={props.markers}
 						parentWidth={props.width}
 						parentHeight={props.height}
 					/>)

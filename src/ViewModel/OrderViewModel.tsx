@@ -94,6 +94,11 @@ export default class OrderViewModel {
 		return this.order_model.getWaitersLocations();
 	}
 
+	getWaiters()
+	{
+		return this.order_model.waiters;
+	}
+	
 	getOrder() {
 		return this.order_model.order;
 	}

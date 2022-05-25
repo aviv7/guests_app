@@ -7,10 +7,10 @@ import MapView from '../View/MapView';
 
 type MapLayoutProps = {
 	style?: StyleProp<ViewStyle>;
-	marker: PointMarker | null;
+	markers: PointMarker[];
 };
 
-export default function MapLayoutController({style, marker}: MapLayoutProps) {
+export default function MapLayoutController({style, markers}: MapLayoutProps) {
 	const mapViewModel = useContext(MapsContext);
 	const imageURL = mapViewModel.getMapDetails().imageURL;
 
@@ -37,7 +37,7 @@ export default function MapLayoutController({style, marker}: MapLayoutProps) {
 		imageHeight,
 		width,
 		height,
-		marker,
+		markers,
 		imageURL,
 	};
 

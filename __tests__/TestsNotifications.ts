@@ -19,65 +19,50 @@ beforeEach(() => {
 	mockUpdateWaiterLocation.mockClear();
 	jest.spyOn(console, 'warn').mockImplementation(jest.fn());
 });
-/*
+
 describe('updateWaiterLocation', () => {
 	it('Sending no arguments', () => {
 		const notifications = new Notifications();
-		notifications.eventToCallback.waiterLocationUpdate([]);
+		notifications.eventToCallback.waiterLocationUpdate({});
 		expect(mockUpdateWaiterLocation).toBeCalledTimes(0);
 	});
 
 	it('Sending less arguments than required', () => {
 		const notifications = new Notifications();
-		notifications.eventToCallback.waiterLocationUpdate(['Hey Ravid']);
+		notifications.eventToCallback.waiterLocationUpdate({'waiterID':'Hey Ravid'});
 		expect(mockUpdateWaiterLocation).toBeCalledTimes(0);
 	});
 
 	it('Sending exactly the needed arguments', () => {
 		const notifications = new Notifications();
-		notifications.eventToCallback.waiterLocationUpdate([
-			'Hey Ravid',
-			{x: 15, y: -26},
-		]);
+		notifications.eventToCallback.waiterLocationUpdate({'waiterID':'Hey Ravid', 'waiterLocation': {x: 15, y: -26}})
 		expect(mockUpdateWaiterLocation).toBeCalledTimes(1);
 	});
-
+		
 	it('Sending extra argument is accepted', () => {
 		const notifications = new Notifications();
-		notifications.eventToCallback.waiterLocationUpdate([
-			'Hey Ravid',
-			{x: 15, y: -26},
-			'Hola Mr. Rom',
-		]);
+		notifications.eventToCallback.waiterLocationUpdate(
+			{'waiterID':'Hey Ravid', 'waiterLocation': {x: 15, y: -26}, 'extra arg': 'extra info'}
+		);
 		expect(mockUpdateWaiterLocation).toBeCalledTimes(1);
 	});
 
-	it('Sending something else then string as guest id', () => {
+	it('Sending something else then string as waiter id', () => {
 		const notifications = new Notifications();
-		notifications.eventToCallback.waiterLocationUpdate([
-			2,
-			{x: 15, y: -26},
-		]);
-		notifications.eventToCallback.waiterLocationUpdate([
-			{s: 'Ravid was here'},
-			{x: 15, y: -26},
-		]);
+		notifications.eventToCallback.waiterLocationUpdate({'waiterID':123, 'waiterLocation': {x: 15, y: -26}});
 		expect(mockUpdateWaiterLocation).toBeCalledTimes(0);
 	});
 
-	it('Sending something else then location as guest location', () => {
+	it('Sending something else then location as waiter location', () => {
 		const notifications = new Notifications();
 		[{z: 15, y: -26}, {x: 15}, {}, 2, '123'].forEach(location =>
-			notifications.eventToCallback.waiterLocationUpdate([
-				'Poopi',
-				location,
-			])
+			notifications.eventToCallback.waiterLocationUpdate({'waiterID':'123', 'waiterLocation': location})
 		);
 		expect(mockUpdateWaiterLocation).toBeCalledTimes(0);
 	});
 });
-*/
-describe('updateOrderStatus', () => {
+
+describe('changeOrderStatus', () => {
 	it('Sending no arguments', () => {
 		const notifications = new Notifications();
 		notifications.eventToCallback.changeOrderStatus({});
