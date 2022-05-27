@@ -20,6 +20,7 @@ export default class OrderViewModel {
 					items: order.items,
 					status: order.status,
 				};
+				this.order_model.orderedItems = order.items;
 			})
 			.catch(error => {
 				if (error.response.status == 404) {
@@ -29,23 +30,52 @@ export default class OrderViewModel {
 				return Promise.reject(error);
 			});
 	}
+	getOrderedItems(){
+		console.log('ordered items === ', this.order_model.orderedItems)
+		return this.order_model.orderedItems;
+	}
 
-	createOrder(items: Object): Promise<Order> {
-		if (!this.hasActiveOrder()) {
-			return this.requests.createOrder(items).then(order_id => {
-				const order: Order = {
-					id: order_id,
-					items: items,
-					status: 'received',
-				};
-				this.order_model.order = order;
-				console.log('created order = ', this.order_model.order);
-				return order;
-			});
+	getItemsToOrder()
+	{
+		return this.order_model.itemsToOrder;
+	}
+	updateItemToOrder(item_id: string,amount: number)
+	{
+		this.order_model.updateItemToOrder(item_id,amount);
+	}
+	clearItemsToOrder()
+	{
+		this.order_model.clearItemsToOrder();
+	}
+
+	createOrder(): Promise<Order> {
+		let items = this.order_model.itemsToOrder;
+		if(Object.keys(items).length > 0)
+		{
+			// let itemsForRequest = Object.fromEntries(items);
+			
+			if (!this.hasActiveOrder()) {
+				return this.requests.createOrder(items).then(order_id => {
+					const order: Order = {
+						id: order_id,
+						items: items,
+						status: 'received',
+					};
+					this.order_model.order = order;
+					this.order_model.orderedItems =items;
+					console.log('created order = ', this.order_model.order);
+					this.order_model.clearItemsToOrder();
+
+					return order;
+				});
+			}
+			return new Promise((_resolve, reject) =>
+				reject('createOrder called when order already exists')
+			);
 		}
 		return new Promise((_resolve, reject) =>
-			reject('createOrder called when order already exists')
-		);
+				reject('createOrder called with 0 items to oreder')
+			);
 	}
 
 	cancelOrder(): Promise<void> {
@@ -97,12 +127,7 @@ export default class OrderViewModel {
 	getOrder() {
 		return this.order_model.order;
 	}
-	getOrderItems(){
-		if(this.hasActiveOrder())
-		{
-			return this.getOrder()?.items;
-		}
-	}
+
 	hasActiveOrder(): boolean {
 		return this.order_model.hasActiveOrder();
 	}
