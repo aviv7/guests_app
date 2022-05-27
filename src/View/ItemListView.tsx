@@ -1,38 +1,34 @@
-import React from 'react';
-import { SafeAreaView, View, Button,FlatList, StyleSheet, Image, Text, StatusBar } from 'react-native';
-import { ItemIDO } from '../types';
-import RenderItem from './itemView'
+import { observer } from "mobx-react";
+import React from "react";
+import { Text, View } from "react-native";
+import { ItemIDO } from "../types";
+import { RenderItem } from "./ItemView";
 
-// const items = [
-//   {
-//     id: 1,
-//     name: 'Hamurger(300g)',
-//     price: 100,
-//     preperationTime: 1,
-//   },
-//   {
-//     id: 2,
-//     name: 'Pizza Mozzarella',
-//     price: 100,
-//     preperationTime: 1,
-//   },
-//   {
-//     id: 3,
-//     name: 'Vanilla Milkshake',
-//     price: 100,
-//     preperationTime: 1,
-//   },
-// ];
+type ItemListViewProps = {
+  itemsMenu: ItemIDO[],
+  itemsToOrder: Record<string, number>,
+  onAddToCart: (item: ItemIDO, amount: number)=> void
+  orderPreparationTime: number
+}
 
-
-const ItemListView = ({onAddToCart , onOrder, items= []}:
-                      {onAddToCart: (item: ItemIDO, amount: number)=> void, onOrder:()=>void, items:ItemIDO[]}) => {
-   return (
-      <View> 
-        {items.map((item)=> <RenderItem item={item} onAddToCart={onAddToCart} />)}
-        {/* <Button title={'Order'} onPress={onOrder} disabled={items.length === 0}/>  */}
-      </View>
+function create(itemsToOrder: Record<string, number>)
+{
+    return Object.keys(itemsToOrder)
+    .map(name => {
+        return (
+              <Text key={name}>{name} - {itemsToOrder[name]}{' '}</Text>
+        )})
+}
+ 
+export const ItemListView = observer((props: ItemListViewProps) => {
+  return (
+     <View>
+        {props.itemsMenu.map((item)=> <RenderItem key={item.id} item={item} onAddToCart={props.onAddToCart} />)}
+        <Text>
+          {'Your current order - \n'}
+        </Text>
+        {create(props.itemsToOrder)}
+        <Text>{'Preparation time = '} {props.orderPreparationTime}</Text>
+     </View>
   );
-};
-
-export default ItemListView; 
+});

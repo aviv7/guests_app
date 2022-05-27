@@ -21,8 +21,8 @@ export const RenderItem = ({item, onAddToCart}:{item:ItemIDO, onAddToCart: (item
           <View style={{ flex: 0.6 }}> 
               <Text style={styles.itemsText}> 
                 {item.name}
-                {`price - ${item.price}`}
-                {`Preparation Time - ${item.preparationTime}`}
+                {`\nprice - ${item.price}`}
+                {`\nPreparation Time - ${item.preparationTime}`}
               </Text>
           </View>
           
@@ -44,9 +44,9 @@ export const RenderItem = ({item, onAddToCart}:{item:ItemIDO, onAddToCart: (item
                />
 
             </View>
-            <View style={{  flex: 0.5 }} >
+            <View style={styles.updateButtons} >
               <Button
-                  title="Add to cart"
+                  title="update"
                   onPress={()=>onAddToCart(item,amount)}
                />
             </View>
@@ -69,7 +69,11 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-     flex: 0.5
+    flex: 0.5
+  },
+  updateButtons:{
+    flex:0.5,
+    justifyContent: 'space-between',
   },
   separator: {
     marginVertical: 8,

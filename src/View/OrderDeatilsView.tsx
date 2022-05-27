@@ -20,7 +20,7 @@ function create(orderedItems: Record<string, number>)
     return Object.keys(orderedItems)
     .map(name => {
         return (
-              <Text key={name+"1"}>{name} - {orderedItems[name]}{' '}</Text>
+              <Text key={name}>{name} - {orderedItems[name]}{' '}</Text>
         )})
     
 }
@@ -39,7 +39,6 @@ export const OrderDetailsView = observer((props: OrderDetailsViewProps) => {
             </Text>
             <View>
                 {create(props.orderedItems)}
-                {/* <Text>{'num items ordered '} = {props.orderedItems.}</Text> */}
             </View>
             <ActivityIndicator size='large' color='#00ff00' />
         </View>

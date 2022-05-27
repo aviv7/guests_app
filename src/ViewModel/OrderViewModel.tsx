@@ -1,6 +1,6 @@
 import {OrderModel} from '../Model/OrderModel';
 import Requests from '../Networking/requests';
-import Location, { Order, OrderID, OrderStatus } from '../types';
+import Location, { ItemIDO, Order, OrderID, OrderStatus } from '../types';
 
 export default class OrderViewModel {
 	private order_model;
@@ -30,24 +30,6 @@ export default class OrderViewModel {
 				return Promise.reject(error);
 			});
 	}
-	getOrderedItems(){
-		console.log('ordered items === ', this.order_model.orderedItems)
-		return this.order_model.orderedItems;
-	}
-
-	getItemsToOrder()
-	{
-		return this.order_model.itemsToOrder;
-	}
-	updateItemToOrder(item_id: string,amount: number)
-	{
-		this.order_model.updateItemToOrder(item_id,amount);
-	}
-	clearItemsToOrder()
-	{
-		this.order_model.clearItemsToOrder();
-	}
-
 	createOrder(): Promise<Order> {
 		let items = this.order_model.itemsToOrder;
 		if(Object.keys(items).length > 0)
@@ -111,6 +93,13 @@ export default class OrderViewModel {
 			reject("submitReview called when order doesn't exists")
 		);
 	}
+	updateItemToOrder(item: ItemIDO,amount: number)
+	{
+		this.order_model.updateItemToOrder(item,amount);
+	}
+	getOrderPreparationTime() : number{
+		return this.order_model.orderPreparationTime;
+	}
 
 	updateOrderStatus(orderID: OrderID, status: OrderStatus): void {		
 		this.order_model.updateOrderStatus(orderID, status);
@@ -137,6 +126,19 @@ export default class OrderViewModel {
 	getOrderId(): OrderID {
 		return this.order_model.getOrderId();
 	}
+	getOrderedItems(){
+		return this.order_model.orderedItems;
+	}
+
+	getItemsToOrder()
+	{
+		return this.order_model.itemsToOrder;
+	}
+	clearItemsToOrder()
+	{
+		this.order_model.clearItemsToOrder();
+	}
+
 	private removeOrder() {
 		this.order_model.removeOrder();
 	}

@@ -15,11 +15,11 @@ const OrderController = observer((_props: OrderControllerProps) => {
 
 	async function SendOrderToServer() {
 		
-		let itemID1 = itemViewModel.getItems()[0].id;
-		let itemID2 = itemViewModel.getItems()[1].id;
-		// let items = {[itemID1]: 2, [itemID2]:1};
-		orderViewModel.updateItemToOrder(itemID1,2);
-		orderViewModel.updateItemToOrder(itemID2,4);
+		// let itemID1 = itemViewModel.getItems()[0].id;
+		// let itemID2 = itemViewModel.getItems()[1].id;
+		// // let items = {[itemID1]: 2, [itemID2]:1};
+		// orderViewModel.updateItemToOrder(itemID1,2);
+		// orderViewModel.updateItemToOrder(itemID2,4);
 
 		await orderViewModel
 			.createOrder()
@@ -76,10 +76,22 @@ const OrderController = observer((_props: OrderControllerProps) => {
 	}
 	function addItemToCart (item: ItemIDO, amount: number): void
 	{
-		orderViewModel.updateItemToOrder(item.id,amount);
+		orderViewModel.updateItemToOrder(item,amount);
 	}
 	function getOrderedItems(){
 		let ids_amounts = orderViewModel.getOrderedItems();
+		let ids = Object.keys(ids_amounts)
+		let names_amounts:Record<string, number> = {};
+		ids.forEach((id:string) => {
+			let item_name = itemViewModel.getItemById(id)?.name;
+			if(item_name)
+				names_amounts[item_name] = ids_amounts[id]
+					
+		})
+		return names_amounts;
+	}
+	function getItemsToOrder(){
+		let ids_amounts = orderViewModel.getItemsToOrder();
 		let ids = Object.keys(ids_amounts)
 		let names_amounts:Record<string, number> = {};
 		ids.forEach((id:string) => {
@@ -99,9 +111,11 @@ const OrderController = observer((_props: OrderControllerProps) => {
 			hasActiveOrder={orderViewModel.hasActiveOrder()} 
 			orderID={orderViewModel.getOrderId()} 
 			orderStatus={orderViewModel.getOrderStatus()}
-			orderedItems={getOrderedItems()}	
+			orderedItems={getOrderedItems()}
+			itemsToOrder={getItemsToOrder()}	
 			itemsMenu={itemViewModel.getItems()}
 			onAddToCart = {addItemToCart}
+			orderPreparationTime = {orderViewModel.getOrderPreparationTime()}
 		/>
 	);
 });

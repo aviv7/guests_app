@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx';
-import Location, {Order, OrderID, OrderStatus, Waiter} from '../types';
+import Location, {ItemIDO, Order, OrderID, OrderStatus, Waiter} from '../types';
 
 export class OrderModel {
 	private _order: Order | null;
@@ -9,13 +9,17 @@ export class OrderModel {
 
 	private _itemsToOrder: Record<string, number>;
 	private _orderedItems: Record<string, number>;
-
+	
+	private _itemsSelected: ItemIDO[];
+	private _orderPreparationTime: number;
 
 	private constructor() {
 		this._order = null;
 		this._waiters = [];
 		this._itemsToOrder = {};
 		this._orderedItems =  {};
+		this._orderPreparationTime = 0;
+		this._itemsSelected = []
 		makeAutoObservable(this);
 	}
 	static instance?: OrderModel;
@@ -26,18 +30,27 @@ export class OrderModel {
 		return this.instance;
 	}
 
-	updateItemToOrder(item_id: string,amount:number){
+	updateItemToOrder(item: ItemIDO,amount:number){
 		if(amount == 0)
 		{
-			if(item_id in this._itemsToOrder)
-				delete this._itemsToOrder[item_id]
+			if(item.id in this._itemsToOrder)
+			{
+				delete this._itemsToOrder[item.id]
+			}
 		}
 		else
-			this._itemsToOrder[item_id] = amount;
+			this._itemsToOrder[item.id] = amount;
+
+		this.updatePreparationTime();
+		
+	}
+	private updatePreparationTime() : void{
+	
 	}
 	clearItemsToOrder(){
 		// this._itemsToOrder.clear();
 		this._itemsToOrder = {};
+		this._itemsSelected = [];
 	}
 
 	removeOrder() {
@@ -78,7 +91,7 @@ export class OrderModel {
 		return this._order != null;
 	}
 
-	get orderedItems(){
+	get orderedItems(): Record<string, number>{
 		return this._orderedItems;
 	}
 	set orderedItems(items: Record<string, number>){
@@ -95,5 +108,9 @@ export class OrderModel {
 
 	set order(order: Order | null) {
 		this._order = order;
+	}
+
+	get orderPreparationTime(){
+		return this._orderPreparationTime;
 	}
 }

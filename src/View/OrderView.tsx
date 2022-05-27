@@ -3,6 +3,7 @@ import {
 	Alert,
 	Button,
 	SafeAreaView,
+	ScrollView,
 	StyleSheet,
 	Text,
 	View,
@@ -12,6 +13,7 @@ import { Modal } from "../Components/Modal";
 import { observer } from 'mobx-react';
 import { OrderDetailsView } from './OrderDeatilsView';
 import { RenderItem } from './ItemView';
+import { ItemListView } from './ItemListView';
 
 type OrderPageViewProps = {
   requestLocation: () => Promise<string>;
@@ -21,8 +23,10 @@ type OrderPageViewProps = {
 	orderID: OrderID;
 	orderStatus: string;
   orderedItems: Record<string, number>;
+  itemsToOrder: Record<string, number>;
   itemsMenu: ItemIDO[];
   onAddToCart: (item: ItemIDO, amount: number)=> void
+  orderPreparationTime: number
 };
 
 export const OrderView = observer((props: OrderPageViewProps) => {
@@ -50,24 +54,25 @@ export const OrderView = observer((props: OrderPageViewProps) => {
                                                   .catch(() => Alert.alert("You must approve location for creating an order"))} />
             <View style={styles.separator} />
             <Modal isVisible={visible}>
-            <Modal.Container>
-                <View>
-                <Modal.Header title="Choose items - " />
-                <Modal.Body>
-                   <View>
-                      {/* {props.itemsMenu.map((item)=> <RenderItem key={item.id} item={item} onAddToCart={props.onAddToCart} />)} */}
-                      {/* <Button title={'Order'} onPress={onOrder} disabled={items.length === 0}/>  */}
+              <Modal.Container>
+                  <View style={styles.modalGeneral}>
+                    <Modal.Header title="Choose items - " />
+                    <Modal.Body>
+                        <SafeAreaView style={styles.modalBody}>
+                          <ScrollView style={styles.scrollView}>
+                              <ItemListView itemsMenu={props.itemsMenu} itemsToOrder={props.itemsToOrder} onAddToCart={props.onAddToCart} orderPreparationTime={props.orderPreparationTime}/>
+                          </ScrollView>
+                        </SafeAreaView>
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <View style={[styles.button, styles.modalFooter]}>
+                        <Button title="submit order" onPress={() => {props.SendOrderToServer(); }} />
+                        <View style={styles.space} />
+                        <Button title="exit order" onPress={() => {setVisible(false)}} />
+                      </View>
+                    </Modal.Footer>
                   </View>
-                </Modal.Body>
-                <Modal.Footer>
-                    <View style={styles.button}>
-                      <Button title="submit order" onPress={() => {props.SendOrderToServer(); }} />
-                      <View style={styles.space} />
-                      <Button title="exit order" onPress={() => {setVisible(false)}} />
-                    </View>
-                </Modal.Footer>
-                </View>
-            </Modal.Container>
+              </Modal.Container>
             </Modal>
         </View>
 	);
@@ -109,11 +114,23 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: "center",
     },
-    modal: {
-      width: "100%",
-      height: "100%",
+    modalGeneral: {
+      width: 300,
+      height: 500,
+      // alignItems: "center",
+      // justifyContent: "center",
+    },
+    modalBody:{
       alignItems: "center",
-      justifyContent: "center",
+      height:"70%",
+    },
+    modalFooter:{
+      height:"100%"
+    },
+    scrollView: {
+      backgroundColor: 'white',
+      width: 300,
+      marginHorizontal: 20,
     },
   });
 
