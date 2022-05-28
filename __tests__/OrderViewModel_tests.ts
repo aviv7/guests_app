@@ -2,18 +2,18 @@ import {flushPromises, makePromise as mockMakePromise} from '../src/PromiseUtils
 import Requests from '../src/Networking/requests';
 import OrderViewModel from '../src/ViewModel/OrderViewModel';
 import {OrderModel} from '../src/Model/OrderModel';
-import { Order, OrderIDO } from '../src/types';
+import { ItemIDO, Order, OrderIDO } from '../src/types';
 
 let item_id1 = 'Item1_ID'
 let item_id2 = 'Item2_ID'
-let items1 = new Map<string, number>();
-items1.set(item_id1, 1);
-items1.set(item_id2, 1);
+const item1: ItemIDO = {id: item_id1, name: 'Beer', price: 10, preparationTime: 1};
+const item2: ItemIDO = {id: item_id2, name: 'Bamba', price: 5, preparationTime: 1};
 
+let itemIDS_amounts: Record<string, number> = {item_id1:1,item_id2:2};
 let order1: OrderIDO = {
 	id: '1',
 	guestId: '1',
-	items: items1,
+	items: itemIDS_amounts,
 	status: 'received',
 	creationTime: new Date(),
 	terminationTime: new Date(),
@@ -22,7 +22,7 @@ let orderAtServer: OrderIDO = order1;
 const createdOrderId = '123';
 let createdOrder: Order = {
 	id: createdOrderId,
-	items: items1,
+	items: itemIDS_amounts,
 	status: 'received',
 };
 
@@ -46,7 +46,7 @@ jest.mock('../src/networking/Requests', () => {
 	});
 });
 
-describe('constructor tests', () => {
+describe('Initialization tests', () => {
 	beforeEach(() => {
 		// Clears the record of calls to the mock constructor function and its methods
 		(Requests as jest.Mock).mockClear();
@@ -68,16 +68,27 @@ describe('constructor tests', () => {
 		await orderViewModel.getOrderFromServer();
 		expect(requests.getGuestOrder).toHaveBeenCalled();
 	});
-	/*
+	
 	it('Initializing order to the order in the server', async () => {
 		const requests = new Requests();
 		const orderViewModel = new OrderViewModel(requests);
-		await flushPromises();
+		await orderViewModel.getOrderFromServer();
 		expect(
 			orderViewModel.getOrder() != null &&
 				orderViewModel.getOrder()?.id === order1.id
 		).toBeTruthy();
-	}); */
+	}); 
+
+	it('Order doesnt exist when there is no order at server', async () => {
+		mockGetGuestOrder.mockImplementation(() => new Promise((_resolve, reject) => reject({response: {status:404}})));
+		
+		const requests = new Requests();
+		const orderViewModel = new OrderViewModel(requests);
+		await orderViewModel.getOrderFromServer();
+		expect(
+			orderViewModel.hasActiveOrder()
+		).toBeFalsy();
+	}); 
 });
 
 
@@ -96,20 +107,20 @@ describe('create order tests', () => {
 	});
 
 	it('create order succes with items to order', async () => {
-		mockGetGuestOrder.mockImplementation(() => mockMakePromise(null));
+		mockGetGuestOrder.mockImplementation(() => new Promise((_resolve, reject) => reject({response: {status:404}})));
 		const requests = new Requests();
 		const orderViewModel = new OrderViewModel(requests);
 		await orderViewModel.getOrderFromServer();
 
-		// orderViewModel.updateItemToOrder(item_id1,1)
-		// const resOrder = await orderViewModel.createOrder();
-		// expect(
-		// 	resOrder != null && (await resOrder).id === createdOrder.id
-		// ).toBeTruthy();
+		orderViewModel.updateItemToOrder(item1,1)
+		const resOrder = await orderViewModel.createOrder();
+		expect(
+			resOrder != null && (await resOrder).id === createdOrder.id
+		).toBeTruthy();
 	});
-/*
+
 	it('create order fails when there is no items to order', async () => {
-		mockGetGuestOrder.mockImplementation(() => mockMakePromise(null));
+		mockGetGuestOrder.mockImplementation(() => new Promise((_resolve, reject) => reject({response: {status:404}})));
 		const requests = new Requests();
 		const orderViewModel = new OrderViewModel(requests);
 		await orderViewModel.getOrderFromServer();
@@ -125,15 +136,15 @@ describe('create order tests', () => {
 		const orderViewModel = new OrderViewModel(requests);
 		await orderViewModel.getOrderFromServer();
 
-		orderViewModel.updateItemToOrder(item_id1,1)
+		orderViewModel.updateItemToOrder(item1,1)
 		await orderViewModel.createOrder()
 		.then(()=> expect(true).toBeFalsy())
 		.catch(() => expect(orderViewModel.hasActiveOrder()).toBeTruthy())
 		
-	}); */
+	}); 
 });
 
-/*
+
 describe('cancel order tests', () => {
 	beforeEach(() => {
 
@@ -152,11 +163,11 @@ describe('cancel order tests', () => {
 	});
 
 	it('cancel order succes after creating order', async () => {
-		mockGetGuestOrder.mockImplementation(() => mockMakePromise(null));
+		mockGetGuestOrder.mockImplementation(() => new Promise((_resolve, reject) => reject({response: {status:404}})));
 		const requests = new Requests();
 		const orderViewModel = new OrderViewModel(requests);
 		await orderViewModel.getOrderFromServer();
-		orderViewModel.updateItemToOrder(item_id1,1);
+		orderViewModel.updateItemToOrder(item1,1);
 
 		await orderViewModel.createOrder();
 		expect(orderViewModel.hasActiveOrder()).toBeTruthy();
@@ -165,37 +176,49 @@ describe('cancel order tests', () => {
 	});
 
 	it('cancel order fails when order doesnt exists', async () => {
+		mockGetGuestOrder.mockImplementation(() => new Promise((_resolve, reject) => reject({response: {status:404}})));
 		const requests = new Requests();
 		const orderViewModel = new OrderViewModel(requests);
 		await orderViewModel.getOrderFromServer();
-
 		await orderViewModel.cancelOrder()
 		.then(()=> expect(true).toBeFalsy())
 		.catch(() => expect(orderViewModel.hasActiveOrder()).toBeFalsy() )
 	});
 
-	// not relevant
-	// it('cancel order fails and order doesnt removed when received false response from server', async () => {
-	// 	mockCancelOrderGuest.mockImplementation(() => mockMakePromise(false));
-	// 	const requests = new Requests();
-	// 	const orderViewModel = new OrderViewModel(requests);
-	// 	await flushPromises();
-	// 	await orderViewModel.createOrder(items1);
-	// 	const res = await orderViewModel.cancelOrder().catch(()=>expect(true));
-	// 	expect(orderViewModel.getOrder() !== null).toBeTruthy();
-	// });
+	it('cancel order fails and order doesnt removed when received false response from server', async () => {
+		mockGetGuestOrder.mockImplementation(() =>mockMakePromise(orderAtServer));
+		mockCancelOrderGuest.mockImplementation(
+			() => new Promise<void>((_, _reject) => _reject())
+		);
+		const requests = new Requests();
+		const orderViewModel = new OrderViewModel(requests);
+		await orderViewModel.getOrderFromServer();
+		await orderViewModel.cancelOrder()
+		.then(()=> expect(true).toBeFalsy())
+		.catch(()=>expect(orderViewModel.hasActiveOrder()).toBeTruthy());
+		expect(
+			orderViewModel.getOrder() != null &&
+				orderViewModel.getOrder()?.id === orderAtServer.id
+		).toBeTruthy();
+	});
 });
-/*
+
 describe('update order status tests', () => {
 	beforeEach(() => {
 		(Requests as jest.Mock).mockClear();
-		OrderModel.getInstance().order = null;
+		mockGetGuestOrder.mockClear();
+		mockCreateOrder.mockClear();
+		
+		// mockGetGuestOrder.mockImplementation(() =>
+		// 	mockMakePromise(orderAtServer)
+		// );
+		let orderModel = OrderModel.getInstance();
+		orderModel.removeOrder();
+		orderModel.clearItemsToOrder();	
 	});
 
 	it('update status sucess when order exists', async () => {
-		mockGetGuestOrder.mockImplementation(() =>
-			mockMakePromise(orderAtServer)
-		);
+		mockGetGuestOrder.mockImplementation(() =>mockMakePromise(orderAtServer));
 		const requests = new Requests();
 		const orderViewModel = new OrderViewModel(requests);
 		orderViewModel.getOrderFromServer();
@@ -207,10 +230,12 @@ describe('update order status tests', () => {
 	});
 	it('update status is ignored when order doesnt exists', async () => {
 		mockGetGuestOrder.mockImplementation(
-			() => new Promise((_resolve, reject) => reject())
-		);
+		() => new Promise((_resolve, reject) => reject()));
 		const requests = new Requests();
 		const orderViewModel = new OrderViewModel(requests);
+		orderViewModel.getOrderFromServer();
+		await flushPromises();
+
 		orderViewModel.updateOrderStatus(orderAtServer.id, 'in preparation');
 		expect(orderViewModel.getOrder() === null).toBeTruthy();
 	});
@@ -220,10 +245,18 @@ describe('submit review tests', () => {
 	beforeEach(() => {
 		// Clears the record of calls to the mock constructor function and its methods
 		(Requests as jest.Mock).mockClear();
-		OrderModel.getInstance().order = null;
+		mockGetGuestOrder.mockClear();
+		mockCreateOrder.mockClear();
+		
+		// mockGetGuestOrder.mockImplementation(() =>
+		// 	mockMakePromise(orderAtServer)
+		// );
+		let orderModel = OrderModel.getInstance();
+		orderModel.removeOrder();
+		orderModel.clearItemsToOrder();	
 	});
 
-	it('submit review sucess when order status is delivered', async () => {
+	it('submit review sucess and order removed when order status is delivered', async () => {
 		mockGetGuestOrder.mockImplementation(() =>
 			mockMakePromise(orderAtServer)
 		);
@@ -232,11 +265,10 @@ describe('submit review tests', () => {
 		orderViewModel.getOrderFromServer();
 		await flushPromises();
 		orderViewModel.updateOrderStatus(orderAtServer.id, 'delivered');
-		let is_success = false;
 		await orderViewModel
 			.submitReview('good service', 5)
-			.then(() => (is_success = true));
-		expect(is_success).toBeTruthy();
+			.then(() => expect(orderViewModel.hasActiveOrder()).toBeFalsy())
+			.catch(() => expect(false).toBeTruthy());
 	});
 	it('submit review fail when order doesnt exists', async () => {
 		mockGetGuestOrder.mockImplementation(
@@ -244,29 +276,30 @@ describe('submit review tests', () => {
 		);
 		const requests = new Requests();
 		const orderViewModel = new OrderViewModel(requests);
+		orderViewModel.getOrderFromServer();
 		await flushPromises();
-		let is_fail = false;
 		await orderViewModel
 			.submitReview('good service', 5)
-			.catch(() => (is_fail = true));
-		expect(is_fail).toBeTruthy();
+			.then(() => expect(false).toBeTruthy())
+			.catch(() => expect(true).toBeTruthy());
 	});
-	it('submit review fail when order status isnt arrived', async () => {
+	it('submit review fail and ordered isnt removed when order status isnt arrived', async () => {
 		mockGetGuestOrder.mockImplementation(() =>
 			mockMakePromise(orderAtServer)
 		);
 		const requests = new Requests();
 		const orderViewModel = new OrderViewModel(requests);
+		orderViewModel.getOrderFromServer();
 		await flushPromises();
 		orderViewModel.updateOrderStatus(orderAtServer.id, 'on the way');
-		let is_fail = false;
+		console.log("----- ", orderViewModel.hasActiveOrder())
 		await orderViewModel
 			.submitReview('good service', 5)
-			.catch(() => (is_fail = true));
-		expect(is_fail).toBeTruthy();
+			.then(() => expect(false).toBeTruthy())
+			.catch(() => expect(orderViewModel.hasActiveOrder()).toBeTruthy());
 	});
 });
-*/
+
 /**
  @todo: add waiters lcoations tests
 **/
