@@ -25,8 +25,9 @@ type OrderPageViewProps = {
   orderedItems: Record<string, number>;
   itemsToOrder: Record<string, number>;
   itemsMenu: ItemIDO[];
-  onAddToCart: (item: ItemIDO, amount: number)=> void
-  orderPreparationTime: number
+  onAddToCart: (item: ItemIDO, amount: number)=> void;
+  orderPreparationTime: number;
+  clearOrder:()=>void;
 };
 
 export const OrderView = observer((props: OrderPageViewProps) => {
@@ -68,7 +69,7 @@ export const OrderView = observer((props: OrderPageViewProps) => {
                       <View style={[styles.button, styles.modalFooter]}>
                         <Button title="submit order" onPress={() => {props.SendOrderToServer(); }} />
                         <View style={styles.space} />
-                        <Button title="exit order" onPress={() => {setVisible(false)}} />
+                        <Button title="exit order" onPress={() => {props.clearOrder(); setVisible(false)}} />
                       </View>
                     </Modal.Footer>
                   </View>

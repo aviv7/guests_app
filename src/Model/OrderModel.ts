@@ -31,26 +31,62 @@ export class OrderModel {
 	}
 
 	updateItemToOrder(item: ItemIDO,amount:number){
-		if(amount == 0)
+
+		if(item.id in this._itemsToOrder)
 		{
-			if(item.id in this._itemsToOrder)
+			if(amount == 0)
 			{
 				delete this._itemsToOrder[item.id]
+				this._itemsSelected = this._itemsSelected.filter(selected_item => selected_item.id !== item.id)
+				this.updatePreparationTime();
+			}
+			else
+			{
+				this._itemsToOrder[item.id] = amount;
 			}
 		}
 		else
-			this._itemsToOrder[item.id] = amount;
+		{
+			if(amount != 0)
+			{
+				this._itemsToOrder[item.id] = amount;
+				this._itemsSelected.push(item);
+				this.updatePreparationTime();
+			}
+		}
 
-		this.updatePreparationTime();
+
+		// if(amount == 0)
+		// {
+		// 	if(item.id in this._itemsToOrder)
+		// 	{
+		// 		delete this._itemsToOrder[item.id]
+		// 	}
+		// 	this._itemsSelected.filter(selected_item => selected_item.id !== item.id)
+		// }
+		// else
+		// 	this._itemsToOrder[item.id] = amount;
+
 		
 	}
 	private updatePreparationTime() : void{
-	
+		if(this._itemsSelected.length > 1)
+		{
+			this._orderPreparationTime = Math.max(... this._itemsSelected.map((item:ItemIDO)=>item.preparationTime))
+		}
+		else
+		{
+			if(this._itemsSelected.length == 1)
+				this._orderPreparationTime = this._itemsSelected[0].preparationTime;
+			else
+				this._orderPreparationTime = 0;
+		}
+			
 	}
 	clearItemsToOrder(){
-		// this._itemsToOrder.clear();
 		this._itemsToOrder = {};
 		this._itemsSelected = [];
+		this._orderPreparationTime = 0;
 	}
 
 	removeOrder() {
@@ -91,6 +127,9 @@ export class OrderModel {
 		return this._order != null;
 	}
 
+	get selectedItems(){
+		return this._itemsSelected;
+	}
 	get orderedItems(): Record<string, number>{
 		return this._orderedItems;
 	}

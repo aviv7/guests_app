@@ -135,7 +135,7 @@ export default class OrderViewModel {
 		return this.order_model.itemsToOrder;
 	}
 	clearItemsToOrder()
-	{
+	{	
 		this.order_model.clearItemsToOrder();
 	}
 

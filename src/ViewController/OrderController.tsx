@@ -102,6 +102,9 @@ const OrderController = observer((_props: OrderControllerProps) => {
 		})
 		return names_amounts;
 	}
+	function clearOrder(){
+		orderViewModel.clearItemsToOrder();
+	}
 	
 	return (
 		<OrderView 
@@ -116,6 +119,7 @@ const OrderController = observer((_props: OrderControllerProps) => {
 			itemsMenu={itemViewModel.getItems()}
 			onAddToCart = {addItemToCart}
 			orderPreparationTime = {orderViewModel.getOrderPreparationTime()}
+			clearOrder = {clearOrder}
 		/>
 	);
 });
