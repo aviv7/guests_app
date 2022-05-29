@@ -48,7 +48,7 @@ export const OrderView = observer((props: OrderPageViewProps) => {
 	}
 	return (
         <View> 
-            <Text> You currently have no active order </Text>
+            <Text style={styles.largeText}> You currently have no active order </Text>
             <Button title="Create Order" onPress={() => 
                                                   props.requestLocation()
                                                   .then(() => setVisible(true))
@@ -57,7 +57,7 @@ export const OrderView = observer((props: OrderPageViewProps) => {
             <Modal isVisible={visible}>
               <Modal.Container>
                   <View style={styles.modalGeneral}>
-                    <Modal.Header title="Choose items - " />
+                    <Modal.Header title="Choose items to order " />
                     <Modal.Body>
                         <SafeAreaView style={styles.modalBody}>
                           <ScrollView style={styles.scrollView}>
@@ -95,10 +95,9 @@ const styles = StyleSheet.create({
       fontSize: 20,
       fontWeight: "bold",
     },
-    text: {
-      fontSize: 16,
-      fontWeight: "400",
-      textAlign: "center",
+    largeText: {
+      fontSize: 20,
+      lineHeight: 30,
     },
     separator: {
       marginVertical: 30,
@@ -117,7 +116,7 @@ const styles = StyleSheet.create({
     },
     modalGeneral: {
       width: 300,
-      height: 500,
+      height: 580,
       // alignItems: "center",
       // justifyContent: "center",
     },

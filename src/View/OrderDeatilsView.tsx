@@ -20,26 +20,24 @@ function create(orderedItems: Record<string, number>)
     return Object.keys(orderedItems)
     .map(name => {
         return (
-              <Text key={name}>{name} - {orderedItems[name]}{' '}</Text>
+              <Text key={name} style={styles.largeText}>{name} - {orderedItems[name]}{'\n'}</Text>
         )})
     
 }
   
 export const OrderDetailsView = observer((props: OrderDetailsViewProps) => {
     return (
-        <View>
-            <Text>
-                {' Order in progress...\n order id'} = {props.orderID}{' '}
+        <View style={styles.container}>
+            <Text style={styles.title}>
+                {'\nOrder in progress ...\nOrder id'} = {props.orderID.substring(0,10)}{'\n'}              
             </Text>
-            <Text>
-                {'Order status: '} {props.orderStatus}
+            <Text style={styles.boldText}>
+                {'Order status: '} {props.orderStatus} {'\n'}
             </Text>
-            <Text>
-                {'Order items: '}  
+            <Text style={styles.largeText}>
+                {'Ordered items:\n'}  
             </Text>
-            <View>
-                {create(props.orderedItems)}
-            </View>
+            {create(props.orderedItems)}
             <ActivityIndicator size='large' color='#00ff00' />
         </View>
     );
@@ -49,39 +47,25 @@ export const OrderDetailsView = observer((props: OrderDetailsViewProps) => {
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
       alignItems: "center",
-      justifyContent: "center",
     },
     title: {
+      color: 'darkgreen',
       fontSize: 20,
-      fontWeight: "bold",
     },
-    text: {
-      fontSize: 16,
-      fontWeight: "400",
-      textAlign: "center",
+    largeText: {
+      fontSize: 20,
+      lineHeight: 25,
+    },
+    boldText:{
+      fontSize: 20,
+      lineHeight: 20,
+      fontWeight: "bold"
     },
     separator: {
       marginVertical: 30,
       height: 1,
       width: "80%",
-    },
-    input: {
-      paddingTop: 10,
-      borderColor: "grey",
-      borderBottomWidth: 2,
-    },
-    button: {
-      flexDirection: "row",
-      flex: 1,
-      justifyContent: "center",
-    },
-    modal: {
-      width: "100%",
-      height: "90%",
-      alignItems: "center",
-      justifyContent: "center",
     },
   });
 
