@@ -19,8 +19,8 @@ export default class ConnectionViewModel {
 		this.items = new ItemViewModel(requests);
 	}
 
-	login(password: string): Promise<string> {
-		return this.requests.login(password).then(token => {
+	login(username: string, password: string): Promise<string> {
+		return this.requests.login(username, password).then(token => {
 			this.model.token = token;
 			return token;
 		});
@@ -49,5 +49,13 @@ export default class ConnectionViewModel {
 			}),
 		];
 		return Promise.all(promises);
+	}
+
+	getUsername(){
+		return this.model.username;
+	}
+
+	setUsername(username: string){
+		this.model.username = username;
 	}
 }

@@ -115,21 +115,23 @@ type MapScreenViewProps = {
 	openBottomSheet: () => void;
 	refBottomSheet: LegacyRef<RBSheet> | undefined;
 	onOrdersClose: () => void;
+	username: string;
 };
 export default function MapScreenView(props: MapScreenViewProps): JSX.Element {
 	return (
 		<View style={styles.screen} testID='homeScreen'>
+			<Text style={styles.usernameStyle}> {'Welcome Back ' + props.username + '!'}</Text>
 			{/* <View>
-				<View style={styles.titleContainer}>
-					<Text style={styles.title}>
-						{`Hey ${props.myName ?? ''}, You're in `}
-						<Text style={styles.location}>
-							{props.mapName ?? 'Loading Map...'}
-						</Text>
-					</Text>
-				</View>
-				{/* <WarningsController /> 
-			</View> */}
+        <View style={styles.titleContainer}>
+            <Text style={styles.title}>
+                {`Hey ${props.myName ?? ''}, You're in `}
+                <Text style={styles.location}>
+                    {props.mapName ?? 'Loading Map...'}
+                </Text>
+            </Text>
+        </View>
+        {/* <WarningsController />
+    </View> */}
 
 			<MapMarkersController style={styles.map} />
 			<TouchableOpacity
@@ -157,7 +159,7 @@ export default function MapScreenView(props: MapScreenViewProps): JSX.Element {
 						backgroundColor: '#dfeef5',
 					},
 				}}>
-				<OrderController/>
+				<OrderController />
 			</RBSheet>
 		</View>
 	);
@@ -205,6 +207,13 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between',
+	},
+	usernameStyle:{
+		fontSize: 18,
+		fontFamily: 'Montserrat-Medium',
+		textAlign: 'center',
+		backgroundColor: '#99cbf2',
+
 	},
 });
 

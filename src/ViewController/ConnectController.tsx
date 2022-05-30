@@ -16,6 +16,7 @@ const ConnectController = observer((_props: LoginControllerProps) => {
 	const [isConnected, setIsConnected] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [password, setPassword] = useState('');
+	const [username, setUsername] = useState('');
 
 	const establishConnection = () => {
 		setIsLoading(true);
@@ -27,12 +28,12 @@ const ConnectController = observer((_props: LoginControllerProps) => {
 			.finally(()=> {setIsLoading(false);});
 	};
 
-	const logIn = (password: string) => {
-		return connectionViewModel.login(password);
+	const logIn = (username: string, password: string) => {
+		return connectionViewModel.login(username, password);
 	};
 
 	const onSubmit = () => {
-		logIn(password)
+		logIn(username, password)
 			.then(establishConnection)
 			.catch(e => {
 				const msg = e?.response?.data ?? "Can't login to server";
@@ -46,8 +47,10 @@ const ConnectController = observer((_props: LoginControllerProps) => {
 			loggedIn={isLoggedIn}
 			isLoading={isLoading}
 			isConnected={isConnected}
+			username={username}
 			password={password}
 			onPasswordChange={setPassword}
+			onUserNameChange={setUsername}
 			onSubmit={onSubmit}
 			establishConnection={establishConnection}
 			isReconnecting={connectionViewModel.connection.isReconnecting}
