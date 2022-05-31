@@ -102,7 +102,6 @@ export class MyLocationViewModel {
 	public startTrackingLocationWhenApproved() {
 		this.tracking = true;
 		if (this.locationModel.locationApproved) {
-			console.log("location approved")
 			this.startTrackingLocation();
 		}
 	}

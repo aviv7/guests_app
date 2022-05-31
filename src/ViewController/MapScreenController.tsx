@@ -42,7 +42,8 @@ function MapScreenController(): JSX.Element {
 	const connectViewModel = useContext(ConnectionContext);
 	const locationViewModel = useContext(MyLocationContext);
 	const orderViewModel = useContext(OrdersContext);
-
+	
+	connectViewModel.setUsername('Aviv')
 
 	const openBottomSheet = () => {
 		refBottomSheet.current?.open();
@@ -81,7 +82,8 @@ function MapScreenController(): JSX.Element {
 		<MapScreenView
 			refBottomSheet={refBottomSheet}
 			openBottomSheet={openBottomSheet}
-		//	onOrdersClose={() => console.log("order tab closed")}
+			onOrdersClose={() => console.log("order tab closed")}
+			username={connectViewModel.getUsername()}
 		/>
 	);
 }

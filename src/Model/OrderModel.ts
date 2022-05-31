@@ -1,13 +1,25 @@
 import {makeAutoObservable} from 'mobx';
-import Location, {Order, OrderID, OrderStatus, Waiter} from '../types';
+import Location, {ItemIDO, Order, OrderID, OrderStatus, Waiter} from '../types';
 
 export class OrderModel {
 	private _order: Order | null;
 	private _waiters: Waiter[];
+	// private _itemsToOrder: Map<string, Number>;
+	// private _orderedItems: Map<string, Number>;
+
+	private _itemsToOrder: Record<string, number>;
+	private _orderedItems: Record<string, number>;
+	
+	private _itemsSelected: ItemIDO[];
+	private _orderPreparationTime: number;
 
 	private constructor() {
 		this._order = null;
 		this._waiters = [];
+		this._itemsToOrder = {};
+		this._orderedItems =  {};
+		this._orderPreparationTime = 0;
+		this._itemsSelected = []
 		makeAutoObservable(this);
 	}
 	static instance?: OrderModel;
@@ -18,9 +30,70 @@ export class OrderModel {
 		return this.instance;
 	}
 
+	updateItemToOrder(item: ItemIDO,amount:number){
+
+		if(item.id in this._itemsToOrder)
+		{
+			if(amount == 0)
+			{
+				delete this._itemsToOrder[item.id]
+				this._itemsSelected = this._itemsSelected.filter(selected_item => selected_item.id !== item.id)
+				this.updatePreparationTime();
+			}
+			else
+			{
+				this._itemsToOrder[item.id] = amount;
+			}
+		}
+		else
+		{
+			if(amount != 0)
+			{
+				this._itemsToOrder[item.id] = amount;
+				this._itemsSelected.push(item);
+				this.updatePreparationTime();
+			}
+		}
+
+
+		// if(amount == 0)
+		// {
+		// 	if(item.id in this._itemsToOrder)
+		// 	{
+		// 		delete this._itemsToOrder[item.id]
+		// 	}
+		// 	this._itemsSelected.filter(selected_item => selected_item.id !== item.id)
+		// }
+		// else
+		// 	this._itemsToOrder[item.id] = amount;
+
+		
+	}
+	private updatePreparationTime() : void{
+		if(this._itemsSelected.length > 1)
+		{
+			this._orderPreparationTime = Math.max(... this._itemsSelected.map((item:ItemIDO)=>item.preparationTime))
+		}
+		else
+		{
+			if(this._itemsSelected.length == 1)
+				this._orderPreparationTime = this._itemsSelected[0].preparationTime;
+			else
+				this._orderPreparationTime = 0;
+		}
+			
+	}
+	clearItemsToOrder(){
+		this._itemsToOrder = {};
+		this._itemsSelected = [];
+		this._orderPreparationTime = 0;
+	}
+
 	removeOrder() {
 		this._order = null;
 		this._waiters = [];
+		// this._orderedItems.clear();
+		this._orderedItems = {};
 	}
 
 	updateOrderStatus(orderID: OrderID, status: OrderStatus) {
@@ -54,6 +127,20 @@ export class OrderModel {
 		return this._order != null;
 	}
 
+	get selectedItems(){
+		return this._itemsSelected;
+	}
+	get orderedItems(): Record<string, number>{
+		return this._orderedItems;
+	}
+	set orderedItems(items: Record<string, number>){
+		this._orderedItems = items;
+	}
+
+	get itemsToOrder(){
+		return this._itemsToOrder;
+	}
+
 	get order() {
 		return this._order;
 	}
@@ -64,5 +151,8 @@ export class OrderModel {
 
 	get waiters(){
 		return this._waiters;
+	}
+	get orderPreparationTime(){
+		return this._orderPreparationTime;
 	}
 }

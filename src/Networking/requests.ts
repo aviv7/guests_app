@@ -51,8 +51,9 @@ export default class Requests implements GuestAPI {
 		this.handler = new RequestsHandler();
 	}
 
-	login(password: string): Promise<string> {
+	login(username: string, password: string): Promise<string> {
 		return this.handler.post<string>('login', {
+			username,
 			password,
 		});
 	}

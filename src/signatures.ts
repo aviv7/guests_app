@@ -12,7 +12,7 @@ import Location, {
 
 export interface GuestAPI {
 	// Guest
-	login(password: string): Promise<string>;
+	login(username: string, password: string): Promise<string>;
 	getItems: () => Promise<ItemIDO[]>;
 	/* need to decide on maps */
 	//getMaps: () => Promise<LocalizationDetailsIDO>; // LocalizationDetailsIDO ?

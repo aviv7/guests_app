@@ -23,4 +23,14 @@ export class ItemModel {
 	set items(items: ItemIDO[]) {
 		this._items = items;
 	}
+
+	getItemById(item_id: string): ItemIDO | undefined
+	{
+		let retVal = undefined;
+		this._items.forEach(function (item: ItemIDO) {
+			if(item.id == item_id)
+				retVal = item;
+		  });
+		return retVal;
+	}
 }

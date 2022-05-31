@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import {
-	ActivityIndicator,
 	Alert,
 	Button,
 	SafeAreaView,
+	ScrollView,
 	StyleSheet,
 	Text,
 	View,
 } from 'react-native';
-import {OrderID} from '../types';
+import {ItemIDO, OrderID} from '../types';
 import { Modal } from "../Components/Modal";
 import { observer } from 'mobx-react';
+import { OrderDetailsView } from './OrderDeatilsView';
+import { RenderItem } from './ItemView';
+import { ItemListView } from './ItemListView';
 
 type OrderPageViewProps = {
   requestLocation: () => Promise<string>;
@@ -19,7 +22,12 @@ type OrderPageViewProps = {
 	hasActiveOrder: boolean;
 	orderID: OrderID;
 	orderStatus: string;
-  orderItems: Object | null | undefined;
+  orderedItems: Record<string, number>;
+  itemsToOrder: Record<string, number>;
+  itemsMenu: ItemIDO[];
+  onAddToCart: (item: ItemIDO, amount: number)=> void;
+  orderPreparationTime: number;
+  clearOrder:()=>void;
 };
 
 export const OrderView = observer((props: OrderPageViewProps) => {
@@ -28,49 +36,44 @@ export const OrderView = observer((props: OrderPageViewProps) => {
 
 	if (props.hasActiveOrder) {
 		return (
-			<View>
-				<Text>
-					{' Order in progress...\n order id'} = {props.orderID}{' '}
-				</Text>
-				<Text>
-					{'Order status: '} {props.orderStatus}
-				</Text>
-        <Text>
-					{'Order items: '} {props.orderItems?.toString()}
-				</Text>
-				<ActivityIndicator size='large' color='#00ff00' />
-
-				<Button
-					title='Cancel Order'
-					onPress={() => {
-						props.cancelOrder(); setVisible(false);
-					}}
-				/>
-			</View>
+      <View>
+        <Button
+          title='Cancel Order'
+          onPress={() => {
+            props.cancelOrder(); 
+          } } />
+          <OrderDetailsView orderID={props.orderID} orderStatus={props.orderStatus} orderedItems={props.orderedItems} />
+      </View>
 		);
 	}
 	return (
         <View> 
-            <Text> You currently have no active order </Text>
+            <Text style={styles.largeText}> You currently have no active order </Text>
             <Button title="Create Order" onPress={() => 
                                                   props.requestLocation()
                                                   .then(() => setVisible(true))
                                                   .catch(() => Alert.alert("You must approve location for creating an order"))} />
             <View style={styles.separator} />
             <Modal isVisible={visible}>
-            <Modal.Container>
-                <View style={styles.modal}>
-                <Modal.Header title="Choose items - " />
-                <Modal.Body>
-                    <Text> items list .. </Text>
-                </Modal.Body>
-                <Modal.Footer>
-                    <View style={styles.button}>
-                    <Button title="submit order" onPress={ () => {props.SendOrderToServer(); }} />
-                    </View>
-                </Modal.Footer>
-                </View>
-            </Modal.Container>
+              <Modal.Container>
+                  <View style={styles.modalGeneral}>
+                    <Modal.Header title="Choose items to order " />
+                    <Modal.Body>
+                        <SafeAreaView style={styles.modalBody}>
+                          <ScrollView style={styles.scrollView}>
+                              <ItemListView itemsMenu={props.itemsMenu} itemsToOrder={props.itemsToOrder} onAddToCart={props.onAddToCart} orderPreparationTime={props.orderPreparationTime}/>
+                          </ScrollView>
+                        </SafeAreaView>
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <View style={[styles.button, styles.modalFooter]}>
+                        <Button title="submit order" onPress={() => {props.SendOrderToServer(); }} />
+                        <View style={styles.space} />
+                        <Button title="exit order" onPress={() => {props.clearOrder(); setVisible(false)}} />
+                      </View>
+                    </Modal.Footer>
+                  </View>
+              </Modal.Container>
             </Modal>
         </View>
 	);
@@ -79,6 +82,10 @@ export const OrderView = observer((props: OrderPageViewProps) => {
 
 
 const styles = StyleSheet.create({
+  space: {
+    width: 20, // or whatever size you need
+    height: 20,
+  },
     container: {
       flex: 1,
       alignItems: "center",
@@ -88,10 +95,9 @@ const styles = StyleSheet.create({
       fontSize: 20,
       fontWeight: "bold",
     },
-    text: {
-      fontSize: 16,
-      fontWeight: "400",
-      textAlign: "center",
+    largeText: {
+      fontSize: 20,
+      lineHeight: 30,
     },
     separator: {
       marginVertical: 30,
@@ -108,11 +114,23 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: "center",
     },
-    modal: {
-      width: "100%",
-      height: "90%",
+    modalGeneral: {
+      width: 300,
+      height: 580,
+      // alignItems: "center",
+      // justifyContent: "center",
+    },
+    modalBody:{
       alignItems: "center",
-      justifyContent: "center",
+      height:"70%",
+    },
+    modalFooter:{
+      height:"100%"
+    },
+    scrollView: {
+      backgroundColor: 'white',
+      width: 300,
+      marginHorizontal: 20,
     },
   });
 

@@ -1,6 +1,6 @@
 import {OrderModel} from '../Model/OrderModel';
 import Requests from '../Networking/requests';
-import Location, { Order, OrderID, OrderStatus } from '../types';
+import Location, { ItemIDO, Order, OrderID, OrderStatus } from '../types';
 
 export default class OrderViewModel {
 	private order_model;
@@ -20,6 +20,7 @@ export default class OrderViewModel {
 					items: order.items,
 					status: order.status,
 				};
+				this.order_model.orderedItems = order.items;
 			})
 			.catch(error => {
 				if (error.response.status == 404) {
@@ -29,23 +30,34 @@ export default class OrderViewModel {
 				return Promise.reject(error);
 			});
 	}
+	createOrder(): Promise<Order> {
+		let items = this.order_model.itemsToOrder;
+		if(Object.keys(items).length > 0)
+		{
+			// let itemsForRequest = Object.fromEntries(items);
+			
+			if (!this.hasActiveOrder()) {
+				return this.requests.createOrder(items).then(order_id => {
+					const order: Order = {
+						id: order_id,
+						items: items,
+						status: 'received',
+					};
+					this.order_model.order = order;
+					this.order_model.orderedItems =items;
+					console.log('created order = ', this.order_model.order);
+					this.order_model.clearItemsToOrder();
 
-	createOrder(items: Object): Promise<Order> {
-		if (!this.hasActiveOrder()) {
-			return this.requests.createOrder(items).then(order_id => {
-				const order: Order = {
-					id: order_id,
-					items: items,
-					status: 'received',
-				};
-				this.order_model.order = order;
-				console.log('created order = ', this.order_model.order);
-				return order;
-			});
+					return order;
+				});
+			}
+			return new Promise((_resolve, reject) =>
+				reject('createOrder called when order already exists')
+			);
 		}
 		return new Promise((_resolve, reject) =>
-			reject('createOrder called when order already exists')
-		);
+				reject('createOrder called with 0 items to oreder')
+			);
 	}
 
 	cancelOrder(): Promise<void> {
@@ -81,6 +93,13 @@ export default class OrderViewModel {
 			reject("submitReview called when order doesn't exists")
 		);
 	}
+	updateItemToOrder(item: ItemIDO,amount: number)
+	{
+		this.order_model.updateItemToOrder(item,amount);
+	}
+	getOrderPreparationTime() : number{
+		return this.order_model.orderPreparationTime;
+	}
 
 	updateOrderStatus(orderID: OrderID, status: OrderStatus): void {		
 		this.order_model.updateOrderStatus(orderID, status);
@@ -102,12 +121,7 @@ export default class OrderViewModel {
 	getOrder() {
 		return this.order_model.order;
 	}
-	getOrderItems(){
-		if(this.hasActiveOrder())
-		{
-			return this.getOrder()?.items;
-		}
-	}
+
 	hasActiveOrder(): boolean {
 		return this.order_model.hasActiveOrder();
 	}
@@ -117,6 +131,19 @@ export default class OrderViewModel {
 	getOrderId(): OrderID {
 		return this.order_model.getOrderId();
 	}
+	getOrderedItems(){
+		return this.order_model.orderedItems;
+	}
+
+	getItemsToOrder()
+	{
+		return this.order_model.itemsToOrder;
+	}
+	clearItemsToOrder()
+	{	
+		this.order_model.clearItemsToOrder();
+	}
+
 	private removeOrder() {
 		this.order_model.removeOrder();
 	}

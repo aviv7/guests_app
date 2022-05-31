@@ -7,7 +7,7 @@ export default class Notifications {
 	
 	private orders: OrderViewModel;
 	public eventToCallback: Record<string, (params: Params) => void> = {
-		waiterLocationUpdate: params => this.waiterLocationUpdate(params),
+		updateWaiterLocation: params => this.updateWaiterLocation(params),
 		changeOrderStatus: params => this.changeOrderStatus(params),
 	};
 
@@ -15,17 +15,18 @@ export default class Notifications {
 		this.orders = new OrderViewModel(new Requests());
 	}
 
-	private waiterLocationUpdate(params: Params): void {
-		const waiterID = params.waiterID;
-		const waiterLocation = params.waiterLocation;
+	private updateWaiterLocation(params: Params): void {
+		console.log("waiter lcoation", params)
+		const waiterId = params.waiterId;
+		const waiterLocation = params.location;
 		
-		if (isString(waiterID) && isLocation(waiterLocation)) {
-			this.orders.updateWaiterLocation(waiterID, waiterLocation);
+		if (isString(waiterId) && isLocation(waiterLocation)) {
+			this.orders.updateWaiterLocation(waiterId, waiterLocation);
 			return;
 		}
 		else{
 			console.warn(
-				`In the event, "waiterLocationUpdate", parameters ${params} are not in the right format`
+				`In the event, "waiterLocationUpdate", parameters are not in the right format`
 			);
 		}
 	}
