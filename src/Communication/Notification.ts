@@ -1,3 +1,4 @@
+import { Alert } from 'react-native';
 import Requests from '../Networking/requests';
 import { isLocation, isOrderStatus, isString } from '../typeGuards';
 import OrderViewModel from '../ViewModel/OrderViewModel';
@@ -37,6 +38,9 @@ export default class Notifications {
 
 		if (isString(orderID) && isOrderStatus(orderStatus)) {
 			this.orders.updateOrderStatus(orderID, orderStatus);
+			if(this.orders.getOrderStatus() == 'delivered'){
+				Alert.alert("Your order has arrived!")
+			}
 			return;
 		}
 		else{

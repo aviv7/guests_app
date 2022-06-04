@@ -122,6 +122,7 @@ const OrderController = observer((_props: OrderControllerProps) => {
 			onAddToCart = {addItemToCart}
 			orderPreparationTime = {orderViewModel.getOrderPreparationTime()}
 			clearOrder = {clearOrder}
+			submitReview={(openText: string, rating:number)=> orderViewModel.submitReview(openText,rating)}
 		/>
 	);
 });

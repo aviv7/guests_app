@@ -6,6 +6,7 @@ import {
 	ScrollView,
 	StyleSheet,
 	Text,
+	TextInput,
 	View,
 } from 'react-native';
 import {ItemIDO, OrderID} from '../types';
@@ -14,6 +15,7 @@ import { observer } from 'mobx-react';
 import { OrderDetailsView } from './OrderDeatilsView';
 import { RenderItem } from './ItemView';
 import { ItemListView } from './ItemListView';
+import TapRating from 'react-native-ratings/dist/TapRating';
 
 type OrderPageViewProps = {
   requestLocation: () => Promise<string>;
@@ -28,13 +30,59 @@ type OrderPageViewProps = {
   onAddToCart: (item: ItemIDO, amount: number)=> void;
   orderPreparationTime: number;
   clearOrder:()=>void;
+  submitReview: (openText: string, rating:number) => void;
 };
 
 export const OrderView = observer((props: OrderPageViewProps) => {
-    const [visible, setVisible] = useState(false);
+
+  function ratingCompleted(rating: number) {
+		setRatingValue(rating);
+	}
+  const [ratingValue, setRatingValue] = useState(1);
+	const [openText, setOpenText] = useState('')
+
+  const [itemsModalVisible, setItemsModalVisible] = useState(false);
+  const [reviewModalVisible, setReviewModalVisible] = useState(false);
 
 
 	if (props.hasActiveOrder) {
+    if(props.orderStatus == 'delivered')
+		{
+			return(
+				<View style={styles.container}>
+				<Text style={styles.title}>Your order has arrived!</Text>
+				<Button title="Submit Review" onPress={ () => setReviewModalVisible(true)} />
+				<View style={styles.separator} />
+					<Modal isVisible={reviewModalVisible}>
+					<Modal.Container>
+						<View style={styles.reviewModal}>
+						<Modal.Header title="Rate our service :)" />
+						<Modal.Body>
+						<TapRating
+							count={5}
+							reviews = {["1","2","3","4","5"]}
+							showRating={true}
+							size={40}
+							onFinishRating={ratingCompleted}
+							/>
+							<TextInput 
+							style={styles.input}
+							placeholder="Additional thoughts?.."
+							onChangeText={feedback => setOpenText(feedback)}
+							/>
+						</Modal.Body>
+						<Modal.Footer>
+							<View style={styles.button}>
+							<Button title="Submit Review" onPress={() => {props.submitReview(openText,ratingValue); setReviewModalVisible(false)}} />
+              <View style={styles.space} />
+                <Button title="Exit Review" onPress={() => {props.clearOrder(); setItemsModalVisible(false)}} />
+							</View>
+						</Modal.Footer>
+						</View>
+					</Modal.Container>
+					</Modal>
+				</View>);
+		}
 		return (
       <View>
         <Button
@@ -51,10 +99,10 @@ export const OrderView = observer((props: OrderPageViewProps) => {
             <Text style={styles.largeText}> You currently have no active order </Text>
             <Button title="Create Order" onPress={() => 
                                                   props.requestLocation()
-                                                  .then(() => setVisible(true))
+                                                  .then(() => setItemsModalVisible(true))
                                                   .catch(() => Alert.alert("You must approve location for creating an order"))} />
             <View style={styles.separator} />
-            <Modal isVisible={visible}>
+            <Modal isVisible={itemsModalVisible}>
               <Modal.Container>
                   <View style={styles.modalGeneral}>
                     <Modal.Header title="Choose items to order " />
@@ -67,9 +115,9 @@ export const OrderView = observer((props: OrderPageViewProps) => {
                     </Modal.Body>
                     <Modal.Footer>
                       <View style={[styles.button, styles.modalFooter]}>
-                        <Button title="submit order" onPress={() => {props.SendOrderToServer(); }} />
+                        <Button title="Submit Order" onPress={() => {props.SendOrderToServer(); }} />
                         <View style={styles.space} />
-                        <Button title="exit order" onPress={() => {props.clearOrder(); setVisible(false)}} />
+                        <Button title="Exit Order" onPress={() => {props.clearOrder(); setItemsModalVisible(false)}} />
                       </View>
                     </Modal.Footer>
                   </View>
@@ -114,6 +162,12 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: "center",
     },
+    reviewModal: {
+      width: "100%",
+      height: "90%",
+      alignItems: "center",
+      justifyContent: "center",
+    },
     modalGeneral: {
       width: 300,
       height: 580,
@@ -136,4 +190,8 @@ const styles = StyleSheet.create({
 
 
 
+
+function setOpenText(feedback: string): void {
+  throw new Error('Function not implemented.');
+}
   
