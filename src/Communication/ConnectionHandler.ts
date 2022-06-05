@@ -86,7 +86,7 @@ export default class ConnectionHandler extends Singleton {
 		}
 		if (this.socket.connected) {
 			this.socket.emit(event, params);
-			// console.info(`Message ${event}:`, params);
+			console.info(`Message ${event}:`, params);
 		} else {
 			// The connection has disconnected from some reason that should have been specified at the "disconnect" event above
 			console.warn(

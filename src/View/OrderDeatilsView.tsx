@@ -38,7 +38,7 @@ export const OrderDetailsView = observer((props: OrderDetailsViewProps) => {
                 {'Ordered items:\n'}  
             </Text>
             {create(props.orderedItems)}
-            <ActivityIndicator size='large' color='#00ff00' />
+            {/* <ActivityIndicator size='large' color='#00ff00' /> */}
         </View>
     );
 });

@@ -16,7 +16,7 @@ function create(itemsToOrder: Record<string, number>)
     return Object.keys(itemsToOrder)
     .map(name => {
         return (
-              <Text key={name}>{name} - {itemsToOrder[name]}{'\n '}</Text>
+              <Text key={name}>{'\t' + name} - {itemsToOrder[name]}{'\n '}</Text>
         )})
 }
  

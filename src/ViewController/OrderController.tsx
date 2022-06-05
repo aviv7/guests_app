@@ -63,12 +63,10 @@ const OrderController = observer((_props: OrderControllerProps) => {
 					locationViewModel.startTrackingLocationWhenApproved();
 					//  return Promise.resolve("approved using location");
 					let location = locationViewModel.getLocation();
-					console.log("location after watch - " , location)
 					if(location === null)
 					{
 						locationViewModel.getLocationPoint();
 						location = locationViewModel.getLocation();
-						console.log("location after get point - " , location)
 					}
 					
 					return location !== null ?

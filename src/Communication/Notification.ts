@@ -18,11 +18,11 @@ export default class Notifications {
 
 	private updateWaiterLocation(params: Params): void {
 		console.log("waiter lcoation", params)
-		const waiterId = params.waiterId;
+		const waiterID = params.waiterID;
 		const waiterLocation = params.location;
 		
-		if (isString(waiterId) && isLocation(waiterLocation)) {
-			this.orders.updateWaiterLocation(waiterId, waiterLocation);
+		if (isString(waiterID) && isLocation(waiterLocation)) {
+			this.orders.updateWaiterLocation(waiterID, waiterLocation);
 			return;
 		}
 		else{
@@ -38,6 +38,10 @@ export default class Notifications {
 
 		if (isString(orderID) && isOrderStatus(orderStatus)) {
 			this.orders.updateOrderStatus(orderID, orderStatus);
+			if(this.orders.getOrderId() == orderID && orderStatus == 'canceled')
+			{
+				Alert.alert("Your order has been canceled by the hotel!")
+			}
 			if(this.orders.getOrderStatus() == 'delivered'){
 				Alert.alert("Your order has arrived!")
 			}

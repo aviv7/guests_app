@@ -33,7 +33,7 @@ export interface guestCommunication {
 // guests Notifications from server:
 export interface GuestNotificationHandler {
 	waiterLocationUpdate: (
-		waiterId: WaiterID,
+		waiterID: WaiterID,
 		waiterLocation: Location
 	) => void;
 	orderStatusChange: (orderId: string, status: OrderStatus) => void;

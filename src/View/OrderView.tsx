@@ -75,7 +75,7 @@ export const OrderView = observer((props: OrderPageViewProps) => {
 							<View style={styles.button}>
 							<Button title="Submit Review" onPress={() => {props.submitReview(openText,ratingValue); setReviewModalVisible(false)}} />
               <View style={styles.space} />
-                <Button title="Exit Review" onPress={() => {props.clearOrder(); setItemsModalVisible(false)}} />
+                <Button title="Exit Review" onPress={() => {props.clearOrder(); setReviewModalVisible(false)}} />
 							</View>
 						</Modal.Footer>
 						</View>

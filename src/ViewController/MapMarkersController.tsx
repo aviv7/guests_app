@@ -18,7 +18,7 @@ function createGuestMarker(myLocation: Location | null): PointMarker {
 	//console.log("guest location marker: ", myLocation)
 	if(myLocation != null)
 	//	return {point:{name: 'Personal', location: myLocation}, marker: ActiveGuestMarker} 
-		return {point:{name: 'Personal', location:new Location(0.5,0.5)}, marker: ActiveGuestMarker} 
+		return {point:{name: 'Personal', location:myLocation}, marker: ActiveGuestMarker} 
 
 	else
 		return {point:{name: 'Personal', location: new Location(0.5,0.5)}, marker: InActiveGuestMarker};
