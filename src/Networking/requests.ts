@@ -65,11 +65,10 @@ export default class Requests implements GuestAPI {
 		return this.handler.get<OrderIDO>('getGuestOrder');
 	}
 	createOrder(orderItems: Object): Promise<OrderID> {
-		console.log('order items -- ' + orderItems);
 		return this.handler.post<OrderID>('createOrder', {orderItems});
 	}
-	cancelOrderGuest(orderId: OrderID): Promise<void> {
-		return this.handler.post<void>('cancelOrderGuest', {orderId});
+	cancelOrderGuest(orderID: OrderID): Promise<void> {
+		return this.handler.post<void>('cancelOrderGuest', {orderID});
 	}
 	submitReview(
 		orderId: string,

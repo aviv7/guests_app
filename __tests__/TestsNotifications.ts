@@ -3,12 +3,13 @@ import OrderViewModel from '../src/ViewModel/OrderViewModel';
 
 const mockUpdateWaiterLocation = jest.fn();
 const mockUpdateOrderStatus = jest.fn();
-
+const mockGetOrderStatus = jest.fn(() => 'status')
 jest.mock('guests_app/src/ViewModel/OrderViewModel', () => {
 	return jest.fn().mockImplementation(() => {
 		return {
 			updateWaiterLocation: mockUpdateWaiterLocation,
 			updateOrderStatus: mockUpdateOrderStatus,
+			getOrderStatus:mockGetOrderStatus,
 		};
 	});
 });
@@ -23,40 +24,40 @@ beforeEach(() => {
 describe('updateWaiterLocation', () => {
 	it('Sending no arguments', () => {
 		const notifications = new Notifications();
-		notifications.eventToCallback.waiterLocationUpdate({});
+		notifications.eventToCallback.updateWaiterLocation({});
 		expect(mockUpdateWaiterLocation).toBeCalledTimes(0);
 	});
 
 	it('Sending less arguments than required', () => {
 		const notifications = new Notifications();
-		notifications.eventToCallback.waiterLocationUpdate({'waiterID':'Hey Ravid'});
+		notifications.eventToCallback.updateWaiterLocation({'waiterID':'Hey Ravid'});
 		expect(mockUpdateWaiterLocation).toBeCalledTimes(0);
 	});
 
 	it('Sending exactly the needed arguments', () => {
 		const notifications = new Notifications();
-		notifications.eventToCallback.waiterLocationUpdate({'waiterID':'Hey Ravid', 'waiterLocation': {x: 15, y: -26}})
+		notifications.eventToCallback.updateWaiterLocation({'waiterID':'Hey Ravid', 'location': {x: 15, y: -26}})
 		expect(mockUpdateWaiterLocation).toBeCalledTimes(1);
 	});
 		
 	it('Sending extra argument is accepted', () => {
 		const notifications = new Notifications();
-		notifications.eventToCallback.waiterLocationUpdate(
-			{'waiterID':'Hey Ravid', 'waiterLocation': {x: 15, y: -26}, 'extra arg': 'extra info'}
+		notifications.eventToCallback.updateWaiterLocation(
+			{'waiterID':'Hey Ravid', 'location': {x: 15, y: -26}, 'extra arg': 'extra info'}
 		);
 		expect(mockUpdateWaiterLocation).toBeCalledTimes(1);
 	});
 
 	it('Sending something else then string as waiter id', () => {
 		const notifications = new Notifications();
-		notifications.eventToCallback.waiterLocationUpdate({'waiterID':123, 'waiterLocation': {x: 15, y: -26}});
+		notifications.eventToCallback.updateWaiterLocation({'waiterID':123, 'location': {x: 15, y: -26}});
 		expect(mockUpdateWaiterLocation).toBeCalledTimes(0);
 	});
 
 	it('Sending something else then location as waiter location', () => {
 		const notifications = new Notifications();
 		[{z: 15, y: -26}, {x: 15}, {}, 2, '123'].forEach(location =>
-			notifications.eventToCallback.waiterLocationUpdate({'waiterID':'123', 'waiterLocation': location})
+			notifications.eventToCallback.updateWaiterLocation({'waiterID':'123', 'location': location})
 		);
 		expect(mockUpdateWaiterLocation).toBeCalledTimes(0);
 	});

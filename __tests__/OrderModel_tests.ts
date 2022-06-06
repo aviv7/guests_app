@@ -41,7 +41,6 @@ describe('tests', () => {
         orderModel.updateItemToOrder(item1,0);
         expect(item_id1 in orderModel.itemsToOrder).toBeFalsy();
         expect(item_id2 in orderModel.itemsToOrder).toBeTruthy();
-        console.log(orderModel.selectedItems.map((item)=>item.id))
 
     })
     
@@ -69,7 +68,6 @@ describe('tests', () => {
         orderModel.updateItemToOrder(item2, 2);
         expect(orderModel.orderPreparationTime == Math.max(item1.preparationTime,item2.preparationTime)).toBeTruthy();
         orderModel.updateItemToOrder(item2, 0);
-        console.log(orderModel.orderPreparationTime)
         expect(orderModel.orderPreparationTime == item1.preparationTime).toBeTruthy();
         orderModel.updateItemToOrder(item1, 0);
         expect(orderModel.orderPreparationTime == 0).toBeTruthy();

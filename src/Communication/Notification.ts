@@ -17,7 +17,7 @@ export default class Notifications {
 	}
 
 	private updateWaiterLocation(params: Params): void {
-		console.log("waiter lcoation", params)
+		console.log("waiter location", params)
 		const waiterID = params.waiterID;
 		const waiterLocation = params.location;
 		
@@ -38,7 +38,8 @@ export default class Notifications {
 
 		if (isString(orderID) && isOrderStatus(orderStatus)) {
 			this.orders.updateOrderStatus(orderID, orderStatus);
-			if(this.orders.getOrderId() == orderID && orderStatus == 'canceled')
+			//this.orders.getOrderId() == orderID && 
+			if(orderStatus == 'canceled')
 			{
 				Alert.alert("Your order has been canceled by the hotel!")
 			}

@@ -93,6 +93,15 @@ export default class OrderViewModel {
 			reject("submitReview called when order doesn't exists")
 		);
 	}
+
+	removeFinishedOrder(){
+		const order = this.getOrder();
+		if (order != null) {
+			if (order.status === 'delivered') {
+				this.order_model.removeOrder();
+			}
+		}
+	}
 	updateItemToOrder(item: ItemIDO,amount: number)
 	{
 		this.order_model.updateItemToOrder(item,amount);

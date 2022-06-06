@@ -31,6 +31,7 @@ type OrderPageViewProps = {
   orderPreparationTime: number;
   clearOrder:()=>void;
   submitReview: (openText: string, rating:number) => void;
+  removeFinishedOrder: () => void;
 };
 
 export const OrderView = observer((props: OrderPageViewProps) => {
@@ -75,7 +76,7 @@ export const OrderView = observer((props: OrderPageViewProps) => {
 							<View style={styles.button}>
 							<Button title="Submit Review" onPress={() => {props.submitReview(openText,ratingValue); setReviewModalVisible(false)}} />
               <View style={styles.space} />
-                <Button title="Exit Review" onPress={() => {props.clearOrder(); setReviewModalVisible(false)}} />
+                <Button title="Exit Review" onPress={() => {props.removeFinishedOrder(); setReviewModalVisible(false)}} />
 							</View>
 						</Modal.Footer>
 						</View>

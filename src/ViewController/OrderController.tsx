@@ -105,7 +105,9 @@ const OrderController = observer((_props: OrderControllerProps) => {
 	function clearOrder(){
 		orderViewModel.clearItemsToOrder();
 	}
-	
+	function removeFinishedOrder(){
+		orderViewModel.removeFinishedOrder();
+	}
 	return (
 		<OrderView 
 			requestLocation={requstLocationForOrder}
@@ -121,6 +123,7 @@ const OrderController = observer((_props: OrderControllerProps) => {
 			orderPreparationTime = {orderViewModel.getOrderPreparationTime()}
 			clearOrder = {clearOrder}
 			submitReview={(openText: string, rating:number)=> orderViewModel.submitReview(openText,rating)}
+			removeFinishedOrder={removeFinishedOrder}
 		/>
 	);
 });
