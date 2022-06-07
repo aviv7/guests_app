@@ -9,6 +9,8 @@ const WarningsController = observer((): JSX.Element => {
 	const outOfBound = myLocation.isCurrentLocationOutOfBound;
 	const currentLocationError = myLocation.currentLocationError;
 
+    console.log("curent location error - " + currentLocationError)
+
 	const warnings = [
 		...(outOfBound ? ["You're out side of the service area"] : []),
 		...(currentLocationError

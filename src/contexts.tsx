@@ -11,7 +11,7 @@ const requests = new Requests();
 const authentication = new ConnectionViewModel(requests);
 const orders = new OrderViewModel(requests);
 const items = new ItemViewModel(requests);
-const maps = new MapViewModel();
+const maps = new MapViewModel(requests);
 const myLocationViewModel = new MyLocationViewModel(new Communicate());
 
 export const ConnectionContext =

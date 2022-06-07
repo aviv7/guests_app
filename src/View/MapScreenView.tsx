@@ -108,7 +108,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 
 import MapMarkersController from '../ViewController/MapMarkersController';
 import OrderController from '../ViewController/OrderController';
-//import WarningsController from '../Controllers/WarningsController';
+import WarningsController from '../ViewController/WarningsController';
 //import NotificationIcon from './NotificationIcon';
 
 type MapScreenViewProps = {
@@ -121,17 +121,9 @@ export default function MapScreenView(props: MapScreenViewProps): JSX.Element {
 	return (
 		<View style={styles.screen} testID='homeScreen'>
 			<Text style={styles.usernameStyle}> {'Welcome Back ' + props.username + '!'}</Text>
-			{/* <View>
-        <View style={styles.titleContainer}>
-            <Text style={styles.title}>
-                {`Hey ${props.myName ?? ''}, You're in `}
-                <Text style={styles.location}>
-                    {props.mapName ?? 'Loading Map...'}
-                </Text>
-            </Text>
-        </View>
-        {/* <WarningsController />
-    </View> */}
+				<View>
+			 		<WarningsController />
+				</View>
 
 			<MapMarkersController style={styles.map} />
 			<TouchableOpacity

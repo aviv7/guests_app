@@ -63,12 +63,16 @@ export class MyLocationViewModel {
 				else if (this.isValidLocation(location)) {
 					this.locationModel.location = location;
 				} else {
+					const error = 'Unexpected error, received invalid location';
+					this.locationModel.locationError = error;
 					this.locationModel.location = null;
 				}
 			},
 			error => {
+				
 				this.locationModel.location = null;
 				console.warn('Could not get the user location', error);
+				this.locationModel.locationError = error;
 			}
 		)
 	}
@@ -89,15 +93,20 @@ export class MyLocationViewModel {
 					this.locationModel.location = location;
 				//	console.log("valid location in watch", location)
 				} else {
+					const error = 'Unexpected error, received invalid location';
+					this.locationModel.locationError = error;
 					this.locationModel.location = null;
 				}
 			},
 			error => {
 				this.locationModel.location = null;
 				console.warn('Could not get the user location', error);
+				this.locationModel.locationError = error;
 			}
 		);
 	}
+
+
 	public startTrackingLocationWhenApproved() {
 		this.tracking = true;
 		if (this.locationModel.locationApproved) {
@@ -175,7 +184,7 @@ export class MyLocationViewModel {
 
 	get isCurrentLocationOutOfBound(): boolean {
 		return (
-			this.locationModel.location === undefined &&
+			this.locationModel.location === null &&
 			this.locationModel.locationError === undefined
 		);
 	}
