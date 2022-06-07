@@ -5,6 +5,7 @@ export class MyLocationModel {
 	private _location: Location | null;
 	private _locationApproved: boolean;
 	private _hasAskedLocationAtStart: boolean;
+	private _locationError: string | undefined;
 
 
 	private constructor() {
@@ -45,5 +46,13 @@ export class MyLocationModel {
 
 	set hasAskedLocationAtStart(hasAsked: boolean) {
 		this._hasAskedLocationAtStart = hasAsked;
+	}
+
+	set locationError(error: string | undefined) {
+		this._locationError = error;
+	}
+
+	get locationError(): string | undefined {
+		return this._locationError;
 	}
 }

@@ -40,11 +40,12 @@
 // 		err => console.log('get location eror - ' + err)
 // 	);
 // }
-import {ItemIDO, OrderID, OrderIDO} from '../types';
+import {ItemIDO, MapIDO, OrderID, OrderIDO} from '../types';
 import {GuestAPI} from './../signatures';
 import RequestsHandler from './RequestsHandler';
 
 export default class Requests implements GuestAPI {
+	
 	private handler: RequestsHandler;
 
 	constructor() {
@@ -80,6 +81,10 @@ export default class Requests implements GuestAPI {
 			details,
 			rating,
 		});
+	}
+
+	getMaps(): Promise<MapIDO[]> {
+		return this.handler.get('getMaps');
 	}
 }
 

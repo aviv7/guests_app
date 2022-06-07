@@ -1,3 +1,4 @@
+
 export default class Location {
 	public readonly x: number;
 	public readonly y: number;
@@ -32,12 +33,12 @@ export type LocationCoordinates = {
 
 export interface LocationService {
 	getLocation(
-		successCallback: (location: Location) => void,
+		successCallback: (location: Location | null) => void,
 		errorCallback: (error: string) => void
 	): void;
 
 	watchLocation(
-		successCallback: (location: Location) => void,
+		successCallback: (location: Location | null) => void,
 		errorCallback: (error: string) => void
 	): void;
 
@@ -92,5 +93,21 @@ export type WaiterIDO = {
 	name: string;
 	avialabe: boolean;
 };
+export type MapIDO = {
+	id: string;
+	name: string;
+	corners: Corners;
+	imageURL: string;
+};
 
-type Token = string;
+export type GPS = {
+	longitude: number;
+	latitude: number;
+};
+
+export type Corners = {
+	topRightGPS: GPS;
+	topLeftGPS: GPS;
+	bottomRightGPS: GPS;
+	bottomLeftGPS: GPS;
+};

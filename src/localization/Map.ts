@@ -1,5 +1,4 @@
-import Location from '../types';
-import {Corners, GPS} from './location';
+import Location, { Corners, GPS } from '../types';
 
 export default class LocationMap {
 	private corners: Corners;
@@ -39,5 +38,11 @@ export default class LocationMap {
 			) / this.height;
 
 		return new Location(localX, localY);
+	}
+
+	hasInside(location: GPS) {
+		const localLocation = this.translateGps(location);
+		const inRange = (value: number) => value >= 0 && value <= 1;
+		return inRange(localLocation.x) && inRange(localLocation.y);
 	}
 }

@@ -1,28 +1,47 @@
-import Location from '../types';
+import Location, { Corners, GPS } from '../types';
 import GeolocationAdapter from './GeolocationAdapter';
 
 import {ILocationService} from './ILocationService';
-import {Corners, GPS} from './location';
 import LocationMap from './Map';
 
 export default class Geolocation implements ILocationService {
 	private geolocationAdapter: GeolocationAdapter;
-	private map: LocationMap;
+	private maps: LocationMap[] = [];
 
 	constructor(corners: Corners) {
-		this.map = new LocationMap(corners);
+		
+		this.maps.push(new LocationMap(corners));
+
+		/* to be added in the future */
+		// autorun(() => {
+		// 	this.maps = mapsViewModel.maps.map(map => new LocationMap(map));
+		// });
 		this.geolocationAdapter = new GeolocationAdapter();
+
 	}
 
-	private translateFunction(successCallback: (location: Location) => void) {
+	private translateFunction(successCallback: (location: Location | null) => void) {
 		return (location: GPS) => {
-			const newLocation = this.map.translateGps(location);
-			successCallback(newLocation);
+			for (const map of this.maps) {
+				if (map.hasInside(location)) {
+					const newLocation = map.translateGps(location);
+					return successCallback(newLocation);
+				}
+			}
+			return successCallback(null);
 		};
 	}
 
+	/* OLD - working */
+	// private translateFunction(successCallback: (location: Location) => void) {
+	// 	return (location: GPS) => {
+	// 		const newLocation = this.map.translateGps(location);
+	// 		successCallback(newLocation);
+	// 	};
+	// }
+
 	watchLocation(
-		successCallback: (location: Location) => void,
+		successCallback: (location: Location | null) => void,
 		errorCallback: (error: string) => void
 	) {
 		this.geolocationAdapter.watchLocation(
@@ -32,7 +51,7 @@ export default class Geolocation implements ILocationService {
 	}
 
 	getLocation(
-		successCallback: (location: Location) => void,
+		successCallback: (location: Location | null) => void,
 		errorCallback: (error: string) => void
 	): void {
 		this.geolocationAdapter.getLocation(

@@ -1,9 +1,8 @@
 import Communicate from '../Communication/Communicate';
 import Geolocation from '../localization/Geolocation';
 import {MyLocationModel} from '../Model/MyLocationModel';
-import Location, {LocationService} from '../types';
+import Location, {Corners, LocationService} from '../types';
 import configuration from '../../configuration.json';
-import {Corners} from '../localization/location';
 import { PermissionsAndroid, Platform } from 'react-native';
 
 const corners: Corners = {
@@ -172,5 +171,16 @@ export class MyLocationViewModel {
 
 	stopTracking() {
 		this.tracking = false;
+	}
+
+	get isCurrentLocationOutOfBound(): boolean {
+		return (
+			this.locationModel.location === undefined &&
+			this.locationModel.locationError === undefined
+		);
+	}
+
+	get currentLocationError(): string | undefined {
+		return this.locationModel.locationError;
 	}
 }
