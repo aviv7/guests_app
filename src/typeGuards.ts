@@ -1,10 +1,11 @@
-import Location, { OrderStatus } from "./types";
+import {Location, OrderStatus } from "./types";
 
 export function isLocation(location: any): location is Location {
 	return (
 		location !== undefined && 
 		(location as Location).x !== undefined &&
-		(location as Location).y !== undefined
+		(location as Location).y !== undefined &&
+		(location as Location)?.mapId !== undefined
 	);
 }
 

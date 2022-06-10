@@ -8,11 +8,11 @@ import MapViewModel from './ViewModel/MapViewModel';
 import Communicate from './Communication/Communicate';
 
 const requests = new Requests();
-const authentication = new ConnectionViewModel(requests);
 const orders = new OrderViewModel(requests);
 const items = new ItemViewModel(requests);
 const maps = new MapViewModel(requests);
-const myLocationViewModel = new MyLocationViewModel(new Communicate());
+const myLocationViewModel = new MyLocationViewModel(new Communicate(),maps);
+const authentication = new ConnectionViewModel(requests,maps);
 
 export const ConnectionContext =
 	createContext<ConnectionViewModel>(authentication);

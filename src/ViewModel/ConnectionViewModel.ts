@@ -2,6 +2,7 @@ import ConnectionHandler from '../Communication/ConnectionHandler';
 import ConnectionModel from '../Model/ConnectionModel';
 import Requests from '../Networking/requests';
 import ItemViewModel from './ItemViewModel';
+import MapViewModel from './MapViewModel';
 import OrderViewModel from './OrderViewModel';
 
 export default class ConnectionViewModel {
@@ -10,13 +11,15 @@ export default class ConnectionViewModel {
 	private connectionHandler: ConnectionHandler;
 	private orders: OrderViewModel;
 	private items: ItemViewModel;
+	private maps: MapViewModel;
 
-	constructor(requests: Requests) {
+	constructor(requests: Requests, mapsViewModel: MapViewModel) {
 		this.model = ConnectionModel.getInstance();
 		this.requests = requests;
 		this.connectionHandler = new ConnectionHandler();
 		this.orders = new OrderViewModel(requests);
 		this.items = new ItemViewModel(requests);
+		this.maps = mapsViewModel;
 	}
 
 	login(username: string, password: string): Promise<string> {
@@ -32,6 +35,7 @@ export default class ConnectionViewModel {
 
 	public connect() {
 		const promises = [
+			this.maps.syncMaps(),
 			this.orders.getOrderFromServer(),
 			this.items.syncItems(),
 			new Promise<void>((resolve, reject) => {

@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx';
-import Location from '../types';
+import {Location} from '../types';
 
 export class MyLocationModel {
 	private _location: Location | null;

@@ -1,23 +1,20 @@
-import Location, { Corners, GPS } from '../types';
+import {Location, GPS } from '../types';
+import MapViewModel from '../ViewModel/MapViewModel';
 import GeolocationAdapter from './GeolocationAdapter';
 
 import {ILocationService} from './ILocationService';
 import LocationMap from './Map';
+import {autorun} from 'mobx';
 
 export default class Geolocation implements ILocationService {
 	private geolocationAdapter: GeolocationAdapter;
 	private maps: LocationMap[] = [];
 
-	constructor(corners: Corners) {
-		
-		this.maps.push(new LocationMap(corners));
-
-		/* to be added in the future */
-		// autorun(() => {
-		// 	this.maps = mapsViewModel.maps.map(map => new LocationMap(map));
-		// });
+	constructor(mapsViewModel: MapViewModel) {
+		autorun(() => {
+			this.maps = mapsViewModel.getMaps().map(map => new LocationMap(map));
+		});
 		this.geolocationAdapter = new GeolocationAdapter();
-
 	}
 
 	private translateFunction(successCallback: (location: Location | null) => void) {

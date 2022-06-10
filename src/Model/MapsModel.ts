@@ -8,13 +8,20 @@ export default class MapsModel {
 		this._maps = [];
 		makeAutoObservable(this);
 	}
+	static instance?: MapsModel;
+	static getInstance(): MapsModel {
+		if (!this.instance) {
+			this.instance = new MapsModel();
+		}
+		return this.instance;
+	}
 
-	get maps() {
+	get maps() :MapIDO[] {
 		return this._maps;
 	}
 
-	set maps(newMaps: MapIDO[]) {
-		this._maps = newMaps;
+	set maps(maps: MapIDO[]) {
+		this._maps = maps;
 	}
 
 	get defaultMap(): MapIDO | undefined {

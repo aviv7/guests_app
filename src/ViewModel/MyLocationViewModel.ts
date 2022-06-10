@@ -1,26 +1,29 @@
 import Communicate from '../Communication/Communicate';
 import Geolocation from '../localization/Geolocation';
 import {MyLocationModel} from '../Model/MyLocationModel';
-import Location, {Corners, LocationService} from '../types';
+import  {Location, Corners, LocationService, MapIDO} from '../types';
 import configuration from '../../configuration.json';
 import { PermissionsAndroid, Platform } from 'react-native';
+import MapViewModel from './MapViewModel';
 
-const corners: Corners = {
-	bottomRightGPS: configuration.corners['bottom-right-gps'],
-	bottomLeftGPS: configuration.corners['bottom-left-gps'],
-	topRightGPS: configuration.corners['top-right-gps'],
-	topLeftGPS: configuration.corners['top-left-gps'],
-};
+// const corners: Corners = {
+// 	bottomRightGPS: configuration.corners['bottom-right-gps'],
+// 	bottomLeftGPS: configuration.corners['bottom-left-gps'],
+// 	topRightGPS: configuration.corners['top-right-gps'],
+// 	topLeftGPS: configuration.corners['top-left-gps'],
+// };
 
 export class MyLocationViewModel {
 	private locationModel: MyLocationModel;
 	private communicate: Communicate;
 	private locationService: LocationService;
 	private tracking: boolean;
+	private mapViewModel: MapViewModel;
 
-	constructor(communication: Communicate) {
+	constructor(communication: Communicate, mapViewModel: MapViewModel) {
+		this.mapViewModel = mapViewModel;
 		this.locationModel = MyLocationModel.getInstance();
-		this.locationService = new Geolocation(corners);
+		this.locationService = new Geolocation(mapViewModel);
 		this.communicate = communication;
 		this.tracking = false;
 	}
@@ -81,7 +84,6 @@ export class MyLocationViewModel {
 		this.locationService.watchLocation(
 			location => {
 				if (!location) {
-					// if location is within the map
 					console.log("location not within map")
 					this.locationModel.location = null;
 				} 
@@ -113,15 +115,6 @@ export class MyLocationViewModel {
 			this.startTrackingLocation();
 		}
 	}
-
-
-	// async function requestPermissions() {
-	// 	if (Platform.OS === 'android') {
-	// 		return	await PermissionsAndroid.request(
-	// 			PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-	// 		)
-	// 	}
-	// }
 	
 	public askLocationApproval = () => {
 		const approvingLocationRequest =
@@ -191,5 +184,12 @@ export class MyLocationViewModel {
 
 	get currentLocationError(): string | undefined {
 		return this.locationModel.locationError;
+	}
+
+	get currentMap(): MapIDO | undefined {
+		let location =  this.getLocation()
+		return location !== null
+			? this.mapViewModel.getMapByID(location.mapId)
+			: this.mapViewModel.getDefaultMap();
 	}
 }

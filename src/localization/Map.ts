@@ -1,11 +1,14 @@
-import Location, { Corners, GPS } from '../types';
+import { GPS, MapIDO } from "../types";
 
 export default class LocationMap {
-	private corners: Corners;
-	private width: number;
-	private height: number;
-	constructor(corners: Corners) {
-		this.corners = corners;
+	private readonly map: MapIDO;
+
+	private readonly width: number;
+	private readonly height: number;
+
+	constructor(map: MapIDO) {
+		this.map = map;
+		const corners = map.corners;
 		this.width =
 			corners.bottomRightGPS.longitude - corners.bottomLeftGPS.longitude;
 		this.height =
@@ -22,22 +25,24 @@ export default class LocationMap {
 		return Math.abs(numerator) / Math.sqrt(denominator);
 	}
 
-	translateGps(location: GPS): Location {
+	translateGps(location: GPS) {
+		const corners = this.map.corners;
+
 		const localX =
 			this.distanceFromLine(
-				this.corners.topLeftGPS,
-				this.corners.bottomLeftGPS,
+				corners.topLeftGPS,
+				corners.bottomLeftGPS,
 				location
 			) / this.width;
 
 		const localY =
 			this.distanceFromLine(
-				this.corners.topLeftGPS,
-				this.corners.topRightGPS,
+				corners.topLeftGPS,
+				corners.topRightGPS,
 				location
 			) / this.height;
 
-		return new Location(localX, localY);
+		return {x: localX, y: localY, mapId: this.map.id};
 	}
 
 	hasInside(location: GPS) {

@@ -1,58 +1,53 @@
-import Location from './types';
+import { GPS, MapIDO } from "./types";
 
-function distanceFromLine(end1: Location, end2: Location, p: Location) {
-	console.log('end1:', end1);
-	console.log('end2:', end2);
-	console.log('p:', p);
+export default class LocationMap {
+	private readonly map: MapIDO;
 
-	const numerator =
-		(end2.x - end1.x) * (end1.y - p.y) - (end1.x - p.x) * (end2.y - end1.y);
-	const denominator =
-		Math.pow(end2.x - end1.x, 2) + Math.pow(end2.y - end1.y, 2);
-	console.log('numerator', numerator);
-	console.log('denominator', denominator);
-	return Math.abs(numerator) / Math.sqrt(denominator);
-}
-
-type Corners = {
-	topRightGPS: Location;
-	topLeftGPS: Location;
-	bottomRightGPS: Location;
-	bottomLeftGPS: Location;
-};
-
-export default class Map {
-	public readonly image: string;
-
-	// Translation from GPS to local coordination
-	private readonly corners: Corners;
 	private readonly width: number;
 	private readonly height: number;
 
-	constructor(image: string, corners: Corners) {
-		this.image = image;
-		this.corners = corners;
-		this.width = corners.bottomRightGPS.x - corners.bottomLeftGPS.x;
-		this.height = corners.topRightGPS.y - corners.bottomRightGPS.y;
+	constructor(map: MapIDO) {
+		this.map = map;
+		const corners = map.corners;
+		this.width =
+			corners.bottomRightGPS.longitude - corners.bottomLeftGPS.longitude;
+		this.height =
+			corners.topRightGPS.latitude - corners.bottomRightGPS.latitude;
 	}
 
-	translateGps(locationGps: Location) {
-		console.log('Calculating x');
+	private distanceFromLine(end1: GPS, end2: GPS, p: GPS) {
+		const numerator =
+			(end2.longitude - end1.longitude) * (end1.latitude - p.latitude) -
+			(end1.longitude - p.longitude) * (end2.latitude - end1.latitude);
+		const denominator =
+			(end2.longitude - end1.longitude) ** 2 +
+			(end2.latitude - end1.latitude) ** 2;
+		return Math.abs(numerator) / Math.sqrt(denominator);
+	}
+
+	translateGps(location: GPS) {
+		const corners = this.map.corners;
+
 		const localX =
-			distanceFromLine(
-				this.corners.topLeftGPS,
-				this.corners.bottomLeftGPS,
-				locationGps
+			this.distanceFromLine(
+				corners.topLeftGPS,
+				corners.bottomLeftGPS,
+				location
 			) / this.width;
 
-		console.log('Calculating y');
 		const localY =
-			distanceFromLine(
-				this.corners.topLeftGPS,
-				this.corners.topRightGPS,
-				locationGps
+			this.distanceFromLine(
+				corners.topLeftGPS,
+				corners.topRightGPS,
+				location
 			) / this.height;
 
-		return new Location(localX, localY);
+		return {x: localX, y: localY, mapId: this.map.id};
+	}
+
+	hasInside(location: GPS) {
+		const localLocation = this.translateGps(location);
+		const inRange = (value: number) => value >= 0 && value <= 1;
+		return inRange(localLocation.x) && inRange(localLocation.y);
 	}
 }

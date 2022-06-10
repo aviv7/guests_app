@@ -31,8 +31,13 @@ describe('Constructor', () => {
 		await itemViewModel.syncItems();
 		expect(
 			itemViewModel.getItems() !== null &&
-				itemViewModel.getItems().length === 2
-		).toBeTruthy();
+			itemViewModel.getItems().length === 2 &&
+			itemViewModel.getItems().at(0)?.id === items[0].id).toBeTruthy();
+	});
+	it('can retrive item by id', async () => {
+		const itemViewModel = new ItemViewModel(new Requests());
+        itemViewModel.syncItems();
+        expect(JSON.stringify(itemViewModel.getItemById('1')) === JSON.stringify (items[0])).toBeTruthy();
 	});
 });
 

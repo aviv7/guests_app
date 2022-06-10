@@ -8,11 +8,12 @@ import MapView from '../View/MapView';
 type MapLayoutProps = {
 	style?: StyleProp<ViewStyle>;
 	markers: PointMarker[];
+	imageURL: string;
 };
 
-export default function MapLayoutController({style, markers}: MapLayoutProps) {
-	const mapViewModel = useContext(MapsContext);
-	const imageURL = mapViewModel.getMapDetails().imageURL;
+export default function MapLayoutController({style, markers, imageURL}: MapLayoutProps) {
+	// const mapViewModel = useContext(MapsContext);
+	// const imageURL = mapViewModel.getMapDetails().imageURL;
 
 	const [imageWidth, setImageWidth] = useState<number | undefined>();
 	const [imageHeight, setImageHeight] = useState<number | undefined>();

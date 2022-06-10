@@ -3,25 +3,20 @@ import MapsModel from '../Model/MapsModel';
 import Requests from '../Networking/requests';
 import { MapIDO } from '../types';
 
-type MapDetails = {
-	id: string;
-	name: string;
-	imageURL: string;
-};
 export default class MapViewModel {
 	private mapsModel: MapsModel;
 	private requests: Requests;
 
 	constructor(requests: Requests) {
-		this.mapsModel = new MapsModel();
+		this.mapsModel = MapsModel.getInstance();
 		this.requests = requests;
 	}
 
-	get maps(): MapIDO[] {
+	getMaps(): MapIDO[] {
 		return this.mapsModel.maps;
 	}
 
-	get defaultMap(): MapIDO | undefined {
+	getDefaultMap(): MapIDO | undefined {
 		return this.mapsModel.defaultMap;
 	}
 
@@ -35,11 +30,11 @@ export default class MapViewModel {
 		});
 	}
 	
-	getMapDetails(): MapDetails {
-		return {
-			id: '',
-			name: '',
-			imageURL: configuration['map-image-url'],
-		};
-	}
+	// getMapDetails(): MapDetails {
+	// 	return {
+	// 		id: '',
+	// 		name: '',
+	// 		imageURL: configuration['map-image-url'],
+	// 	};
+	// }
 }

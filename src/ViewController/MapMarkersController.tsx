@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {StyleProp, ViewStyle} from 'react-native';
+import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 
 import {observer} from 'mobx-react-lite';
 
@@ -8,7 +8,7 @@ import MapLayoutController from './MapLayoutController';
 import { MyLocationContext, OrdersContext } from '../contexts';
 import { PointMarker } from '../map';
 import WaiterMarker, { ActiveGuestMarker, InActiveGuestMarker } from '../View/markers/WaiterMarker';
-import Location from '../types';
+import {Location} from '../types';
 
 type MapMarkerControllerProps = {
 	style?: StyleProp<ViewStyle>;
@@ -21,7 +21,7 @@ function createGuestMarker(myLocation: Location | null): PointMarker {
 		return {point:{name: 'Personal', location:myLocation}, marker: ActiveGuestMarker} 
 
 	else
-		return {point:{name: 'Personal', location: new Location(0.5,0.5)}, marker: InActiveGuestMarker};
+		return {point:{name: 'Personal', location: {x: 0.5, y: 0.5, mapId: ''},}, marker: InActiveGuestMarker};
 }
 
 function createWaiterMarker(waiterLocation: Location): PointMarker {
@@ -44,7 +44,30 @@ const MapMarkersController = observer(({style}: MapMarkerControllerProps) => {
 
 	const allMarkers = waiterMarkers.concat([personalMarker]);
 
-	return <MapLayoutController markers={allMarkers} style={style} />;
+
+	const currentMap = myLocationViewModel.currentMap;
+	if (!currentMap) {
+		return (
+			<View style={styles.loadingContainer}>
+				<Text style={styles.loadingText}>Loading map...</Text>
+			</View>
+		);
+	}
+	
+	return <MapLayoutController markers={allMarkers} style={style} imageURL={currentMap.imageURL}
+	/>;
+});
+
+const styles = StyleSheet.create({
+	loadingContainer: {
+		flex: 1,
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	loadingText: {
+		fontSize: 20,
+	},
 });
 
 export default MapMarkersController;

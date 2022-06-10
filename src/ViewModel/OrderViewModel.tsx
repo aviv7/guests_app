@@ -1,6 +1,6 @@
 import {OrderModel} from '../Model/OrderModel';
 import Requests from '../Networking/requests';
-import Location, { ItemIDO, Order, OrderID, OrderStatus } from '../types';
+import {Location, ItemIDO, Order, OrderID, OrderStatus } from '../types';
 
 export default class OrderViewModel {
 	private order_model;
