@@ -25,7 +25,7 @@ const OrderController = observer((_props: OrderControllerProps) => {
 			.createOrder()
 			.then(createdOrder => 
 				{
-				//	console.log('order created with order id: ' + createdOrder.id);
+					console.log('order created with order id: ' + createdOrder.id);
 					Alert.alert("Order Created Succesfully!")
 					startWaitingForOrder();
 				})
@@ -45,22 +45,22 @@ const OrderController = observer((_props: OrderControllerProps) => {
 	
 	function startWaitingForOrder() {
 		console.log('start waiting for order - tracking location');
-		locationViewModel.startTrackingLocationWhenApproved();
+		locationViewModel.locationNeedsToBeTracked();
 	}
 
 
 	function CancelOrder() {
 		orderViewModel
 			.cancelOrder()
-			.then(() =>{Alert.alert('order canceled succesfully'); })
+			.then(() =>{Alert.alert('order canceled succesfully');})
 			.catch(err => Alert.alert('failed to cancel order due to: ' + err));
 	}
 
-	function requstLocationForOrder() {
+	function requestLocationForOrder() {
 		return locationViewModel.askLocationApproval()
 		.then(()=>  
 				{ 
-					locationViewModel.startTrackingLocationWhenApproved();
+					locationViewModel.startWatchingLocation();
 					//  return Promise.resolve("approved using location");
 					let location = locationViewModel.getLocation();
 					if(location === null)
@@ -110,7 +110,7 @@ const OrderController = observer((_props: OrderControllerProps) => {
 	}
 	return (
 		<OrderView 
-			requestLocation={requstLocationForOrder}
+			requestLocation={requestLocationForOrder}
 			SendOrderToServer={SendOrderToServer}
 			cancelOrder={CancelOrder}
 			hasActiveOrder={orderViewModel.hasActiveOrder()} 

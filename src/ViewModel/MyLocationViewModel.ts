@@ -74,7 +74,7 @@ export class MyLocationViewModel {
 		)
 	}
 
-	private startTrackingLocation() {
+	public startWatchingLocation() {
 		this.locationService.watchLocation(
 			location => {
 				if (!location) {
@@ -99,13 +99,13 @@ export class MyLocationViewModel {
 			}
 		);
 	}
-	public startTrackingLocationWhenApproved() {
+	public locationNeedsToBeTracked() {
 		this.tracking = true;
-		if (this.locationModel.locationApproved) {
-			this.startTrackingLocation();
-		}
 	}
 
+	public stopTrackingLocation() {
+		this.tracking = false;
+	}
 
 	// async function requestPermissions() {
 	// 	if (Platform.OS === 'android') {
@@ -132,7 +132,7 @@ export class MyLocationViewModel {
 			})
 			.then(value => {
 				if (value === PermissionsAndroid.RESULTS.GRANTED) {
-					this.approveTrackingLocation();
+					this.approveUsingLocation();
 					return Promise.resolve('approved using location')
 				} else if (value === 'never_ask_again') {
 					return Promise.reject(
@@ -162,7 +162,7 @@ export class MyLocationViewModel {
 		this.locationModel.hasAskedLocationAtStart = true;
 	}
 	
-	private approveTrackingLocation() {
+	private approveUsingLocation() {
 		this.locationModel.locationApproved = true;
 	}
 
@@ -170,7 +170,4 @@ export class MyLocationViewModel {
 		this.locationModel.locationApproved = false;
 	}
 
-	stopTracking() {
-		this.tracking = false;
-	}
 }
