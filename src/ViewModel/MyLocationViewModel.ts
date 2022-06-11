@@ -80,7 +80,7 @@ export class MyLocationViewModel {
 		)
 	}
 
-	private startTrackingLocation() {
+	public startWatchingLocation() {
 		this.locationService.watchLocation(
 			location => {
 				if (!location) {
@@ -93,6 +93,7 @@ export class MyLocationViewModel {
 						this.communicate.updateGuestLocation(location);
 					}
 					this.locationModel.location = location;
+					console.log("current map = ", this.mapViewModel.getMapByID(location.mapID)?.name)
 				//	console.log("valid location in watch", location)
 				} else {
 					const error = 'Unexpected error, received invalid location';
@@ -107,14 +108,21 @@ export class MyLocationViewModel {
 			}
 		);
 	}
-
-
-	public startTrackingLocationWhenApproved() {
+	public locationNeedsToBeTracked() {
 		this.tracking = true;
-		if (this.locationModel.locationApproved) {
-			this.startTrackingLocation();
-		}
 	}
+
+	public stopTrackingLocation() {
+		this.tracking = false;
+	}
+
+	// async function requestPermissions() {
+	// 	if (Platform.OS === 'android') {
+	// 		return	await PermissionsAndroid.request(
+	// 			PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+	// 		)
+	// 	}
+	// }
 	
 	public askLocationApproval = () => {
 		const approvingLocationRequest =
@@ -133,7 +141,7 @@ export class MyLocationViewModel {
 			})
 			.then(value => {
 				if (value === PermissionsAndroid.RESULTS.GRANTED) {
-					this.approveTrackingLocation();
+					this.approveUsingLocation();
 					return Promise.resolve('approved using location')
 				} else if (value === 'never_ask_again') {
 					return Promise.reject(
@@ -163,7 +171,7 @@ export class MyLocationViewModel {
 		this.locationModel.hasAskedLocationAtStart = true;
 	}
 	
-	private approveTrackingLocation() {
+	private approveUsingLocation() {
 		this.locationModel.locationApproved = true;
 	}
 
@@ -189,7 +197,7 @@ export class MyLocationViewModel {
 	get currentMap(): MapIDO | undefined {
 		let location =  this.getLocation()
 		return location !== null
-			? this.mapViewModel.getMapByID(location.mapId)
+			? this.mapViewModel.getMapByID(location.mapID)
 			: this.mapViewModel.getDefaultMap();
 	}
 }

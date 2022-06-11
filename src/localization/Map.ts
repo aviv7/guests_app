@@ -28,21 +28,29 @@ export default class LocationMap {
 	translateGps(location: GPS) {
 		const corners = this.map.corners;
 
-		const localX =
+		let localX =
 			this.distanceFromLine(
 				corners.topLeftGPS,
 				corners.bottomLeftGPS,
 				location
 			) / this.width;
 
-		const localY =
+		if(corners.topLeftGPS.longitude > location.longitude)
+				localX = localX * (-1)
+
+	
+		let localY =
 			this.distanceFromLine(
 				corners.topLeftGPS,
 				corners.topRightGPS,
 				location
 			) / this.height;
+	
+		if(corners.topLeftGPS.latitude < location.latitude)
+			localY = localY * (-1)
 
-		return {x: localX, y: localY, mapId: this.map.id};
+
+		return {x: localX, y: localY, mapID: this.map.id};
 	}
 
 	hasInside(location: GPS) {

@@ -1,34 +1,12 @@
-import {flushPromises, makePromise as mockMakePromise} from '../src/PromiseUtils';
-import Requests from '../src/Networking/requests';
-import { MyLocationViewModel } from '../src/ViewModel/MyLocationViewModel';
-import MapViewModel from '../src/ViewModel/MapViewModel';
-import { Corners, MapIDO } from '../src/types';
 import Communicate from '../src/Communication/Communicate';
-
-const map1ID = "map1ID"
-const map2ID = "map2ID"
-const corners: Corners = {
-    bottomRightGPS: {"longitude": 34.802516, "latitude": 31.261649},
-    bottomLeftGPS: {"longitude": 34.800838, "latitude": 31.261649},
-    topRightGPS: {"longitude": 34.802516, "latitude": 31.26355},
-   topLeftGPS: {"longitude": 34.800838, "latitude": 31.26355}
-}
-
-const mapsAtServer:MapIDO[] = [{id:map1ID, name: "defaultMAP",corners: corners, imageURL:"beit hastudent"},
-                               {id:map2ID, name: "90'sBuildings",corners: corners, imageURL:"90's buildings"}];
-const mockGetMaps = jest
-	.fn()
-	.mockImplementation(() => mockMakePromise(mapsAtServer));
+import Geolocation from '../src/localization/Geolocation';
+import Requests from '../src/Networking/requests';
+import {flushPromises, makePromise as mockMakePromise} from '../src/PromiseUtils';
+import {Location} from '../src/types';
+import MapViewModel from '../src/ViewModel/MapViewModel';
+import { MyLocationViewModel } from '../src/ViewModel/MyLocationViewModel';
 
 
-jest.mock('../src/networking/Requests', () => {
-	return jest.fn().mockImplementation(() => {
-		return {
-			getMaps: mockGetMaps,
-            
-		};
-	});
-});
 
 const mockUpdateGuestLocation = jest.fn();
 jest.mock('../src/Communication/Communicate', () => {
@@ -39,18 +17,74 @@ jest.mock('../src/Communication/Communicate', () => {
 	});
 });
 
+const mockWatchLocation = jest.fn();
+jest.mock('../src/localization/Geolocation', () => {
+	return jest.fn().mockImplementation(() => {
+		return {
+			watchLocation: mockWatchLocation,
+		};
+	});
+});
+
+const requests = new Requests();
+const mapViewModel = new MapViewModel(requests);
 describe('Initialization tests', () => {
 	beforeEach(() => {
 		// Clears the record of calls to the mock constructor function and its methods
-		(Requests as jest.Mock).mockClear();
+		(Communicate as jest.Mock).mockClear();
 	});
 
-	it('The class can be created successfully', async () => {
+    it('The class can be created successfully', async () => {
         const communicate = new Communicate();
-        const mapViewModel = new MapViewModel(new Requests());
 		const locationViewModel = new MyLocationViewModel(communicate,mapViewModel);
 		expect(locationViewModel).toBeTruthy();
 	});
+    
+});
 
+describe('Tracking location tests', () => {
+	beforeEach(() => {
+		// Clears the record of calls to the mock constructor function and its methods
+		(Communicate as jest.Mock).mockClear();
+        (Geolocation as jest.Mock).mockClear();
+	});
+    
+    it('startWatchingLocation updates location when location is valid', async () => {
+        const communicate = new Communicate();
+		const locationViewModel = new MyLocationViewModel(communicate,mapViewModel);
 
+        let successCallback2 = (location: Location) => location;
+		mockWatchLocation.mockImplementation((successCallback, error) => successCallback2 = successCallback)
+        locationViewModel.startWatchingLocation();
+        let currentLocation: Location = {x:0.5, y:0.5, mapID:'map'}
+        successCallback2(currentLocation)
+        await flushPromises();
+        expect(JSON.stringify(locationViewModel.getLocation()) === JSON.stringify(currentLocation))
+	});
+
+    it('Location is not sent to server when not tracking', async () => {
+        const communicate = new Communicate();
+		const locationViewModel = new MyLocationViewModel(communicate,mapViewModel);
+        let successCallback2 = (location: Location) => location;
+		mockWatchLocation.mockImplementation((successCallback, error) => successCallback2 = successCallback)
+        locationViewModel.startWatchingLocation();
+		let currentLocation: Location = {x:0.5, y:0.5, mapID:'map'}
+        successCallback2(currentLocation)
+        await flushPromises();
+        expect(communicate.updateGuestLocation).toHaveBeenCalledTimes(0)
+	});
+
+    it('Location is sent to server when tracking', async () => {
+        const communicate = new Communicate();
+		const locationViewModel = new MyLocationViewModel(communicate,mapViewModel);
+        locationViewModel.locationNeedsToBeTracked();
+        let successCallback2 = (location: Location) => location;
+		mockWatchLocation.mockImplementation((successCallback, error) => successCallback2 = successCallback)
+        locationViewModel.startWatchingLocation();
+		let currentLocation: Location = {x:0.5, y:0.5, mapID:'map'}
+        successCallback2(currentLocation)
+        await flushPromises();
+        expect(communicate.updateGuestLocation).toHaveBeenCalledTimes(1)
+	});
+    
 });

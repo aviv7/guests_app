@@ -17,7 +17,6 @@ export default class Notifications {
 	}
 
 	private updateWaiterLocation(params: Params): void {
-		console.log("waiter location", params)
 		const waiterID = params.waiterID;
 		const waiterLocation = params.location;
 		

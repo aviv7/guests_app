@@ -5,7 +5,7 @@ export function isLocation(location: any): location is Location {
 		location !== undefined && 
 		(location as Location).x !== undefined &&
 		(location as Location).y !== undefined &&
-		(location as Location)?.mapId !== undefined
+		(location as Location)?.mapID !== undefined
 	);
 }
 

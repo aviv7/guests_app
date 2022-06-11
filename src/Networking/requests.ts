@@ -30,12 +30,12 @@ export default class Requests implements GuestAPI {
 		return this.handler.post<void>('cancelOrderGuest', {orderID});
 	}
 	submitReview(
-		orderId: string,
+		orderID: string,
 		details: string,
 		rating: Number
 	): Promise<void> {
 		return this.handler.post<void>('submitReview', {
-			orderId,
+			orderID,
 			details,
 			rating,
 		});

@@ -49,24 +49,23 @@ function MapScreenController(): JSX.Element {
 		refBottomSheet.current?.open();
 	};
 	
-	function onLocationRefuse()
-	{
-		if(orderViewModel.hasActiveOrder())
-		{
-			Alert.alert("You have an active order, Please approve using your location");
-			locationViewModel.askLocationApproval().then(() => locationViewModel.startTrackingLocationWhenApproved());
-		}
-		else
-			Alert.alert("Approve location for seeing your location on map") 
-	}
 	function onStart(){
+		if(orderViewModel.hasActiveOrder()){
+			locationViewModel.locationNeedsToBeTracked();
+			locationViewModel.askLocationApproval()
+			.then(() =>{locationViewModel.startWatchingLocation();})
+			.catch(() => Alert.alert("You have an active order, Please approve using your location"))
+			locationViewModel.AskedLocationAtStart();
+		}
+		else{
+			locationViewModel.stopTrackingLocation();
+		}
+
 		if(!locationViewModel.getHasAskedLocationAtStart())
 		{	
 			console.log("asking location at start -- ")
 			locationViewModel.askLocationApproval()
-			.then(() => 
-			locationViewModel.startTrackingLocationWhenApproved())
-			.catch(() => {console.log("on start, location refuse 1"); onLocationRefuse()});
+			.then(() => locationViewModel.startWatchingLocation())
 			locationViewModel.AskedLocationAtStart();
 		}
 		// locationViewModel.getLocationPoint();

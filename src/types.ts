@@ -98,7 +98,7 @@ export type Corners = {
 export type Location = {
 	x: number;
 	y: number;
-	mapId: string;
+	mapID: string;
 };
 
 

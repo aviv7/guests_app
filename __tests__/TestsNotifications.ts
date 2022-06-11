@@ -36,27 +36,27 @@ describe('updateWaiterLocation', () => {
 
 	it('Sending exactly the needed arguments', () => {
 		const notifications = new Notifications();
-		notifications.eventToCallback.updateWaiterLocation({'waiterID':'Hey Ravid', 'location': {x: 15, y: -26}})
+		notifications.eventToCallback.updateWaiterLocation({'waiterID':'Hey Ravid', 'location': {x: 15, y: -26, mapID: 'id'}})
 		expect(mockUpdateWaiterLocation).toBeCalledTimes(1);
 	});
 		
 	it('Sending extra argument is accepted', () => {
 		const notifications = new Notifications();
 		notifications.eventToCallback.updateWaiterLocation(
-			{'waiterID':'Hey Ravid', 'location': {x: 15, y: -26}, 'extra arg': 'extra info'}
+			{'waiterID':'Hey Ravid', 'location': {x: 15, y: -26, mapID: 'id'}, 'extra arg': 'extra info'}
 		);
 		expect(mockUpdateWaiterLocation).toBeCalledTimes(1);
 	});
 
 	it('Sending something else then string as waiter id', () => {
 		const notifications = new Notifications();
-		notifications.eventToCallback.updateWaiterLocation({'waiterID':123, 'location': {x: 15, y: -26}});
+		notifications.eventToCallback.updateWaiterLocation({'waiterID':123, 'location': {x: 15, y: -26,mapID: 'id'}});
 		expect(mockUpdateWaiterLocation).toBeCalledTimes(0);
 	});
 
 	it('Sending something else then location as waiter location', () => {
 		const notifications = new Notifications();
-		[{z: 15, y: -26}, {x: 15}, {}, 2, '123'].forEach(location =>
+		[{z: 15, y: -26}, {x: 15, mapID: 'id'}, {mapID: 'id'}, 2, '123'].forEach(location =>
 			notifications.eventToCallback.updateWaiterLocation({'waiterID':'123', 'location': location})
 		);
 		expect(mockUpdateWaiterLocation).toBeCalledTimes(0);

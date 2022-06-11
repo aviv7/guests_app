@@ -22,6 +22,7 @@ export default class Geolocation implements ILocationService {
 			for (const map of this.maps) {
 				if (map.hasInside(location)) {
 					const newLocation = map.translateGps(location);
+					console.log(newLocation)
 					return successCallback(newLocation);
 				}
 			}
