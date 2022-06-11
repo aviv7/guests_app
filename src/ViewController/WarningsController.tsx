@@ -18,10 +18,6 @@ const WarningsController = observer((): JSX.Element => {
 			: []),
 	];
 
-	if (warnings.length === 0) {
-		return <></>;
-	}
-
 	return <WarningsView warnings={warnings} />;
 });
 

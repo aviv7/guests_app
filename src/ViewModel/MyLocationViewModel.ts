@@ -99,12 +99,15 @@ export class MyLocationViewModel {
 					const error = 'Unexpected error, received invalid location';
 					this.locationModel.locationError = error;
 					this.locationModel.location = null;
+					console.log("location error 2 = ", this.locationModel.locationError)
+
 				}
 			},
 			error => {
 				this.locationModel.location = null;
 				console.warn('Could not get the user location', error);
 				this.locationModel.locationError = error;
+				console.log("location error 1 = ", this.locationModel.locationError)
 			}
 		);
 	}
