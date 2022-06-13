@@ -14,12 +14,6 @@ const OrderController = observer((_props: OrderControllerProps) => {
 	const locationViewModel = useContext(MyLocationContext);
 
 	async function SendOrderToServer() {
-		
-		// let itemID1 = itemViewModel.getItems()[0].id;
-		// let itemID2 = itemViewModel.getItems()[1].id;
-		// // let items = {[itemID1]: 2, [itemID2]:1};
-		// orderViewModel.updateItemToOrder(itemID1,2);
-		// orderViewModel.updateItemToOrder(itemID2,4);
 
 		await orderViewModel
 			.createOrder()

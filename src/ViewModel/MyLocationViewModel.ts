@@ -56,60 +56,73 @@ export class MyLocationViewModel {
     // }
 
 	public getLocationPoint() {
-		this.locationService.getLocation(
-			location => {
-				if (!location) {
-					// if location is within the map
-					console.log("location not within map")
+		if(this.locationModel.locationApproved)
+		{
+			this.locationService.getLocation(
+				location => {
+					if (!location) {
+						// if location is within the map
+						console.log("location not within map")
+						this.locationModel.location = null;
+					} 
+					else if (this.isValidLocation(location)) {
+						this.locationModel.location = location;
+					} else {
+						const error = 'Unexpected error, received invalid location';
+						this.locationModel.locationError = error;
+						this.locationModel.location = null;
+					}
+				},
+				error => {
+					
 					this.locationModel.location = null;
-				} 
-				else if (this.isValidLocation(location)) {
-					this.locationModel.location = location;
-				} else {
-					const error = 'Unexpected error, received invalid location';
+					console.warn('Could not get the user location', error);
 					this.locationModel.locationError = error;
-					this.locationModel.location = null;
 				}
-			},
-			error => {
-				
-				this.locationModel.location = null;
-				console.warn('Could not get the user location', error);
-				this.locationModel.locationError = error;
-			}
 		)
+		}
+		else{
+			this.locationModel.locationError = 'Please approve using location'
+			this.locationModel.location = null;
+		}
 	}
 
 	public startWatchingLocation() {
-		this.locationService.watchLocation(
-			location => {
-				if (!location) {
-					console.log("location not within map")
-					this.locationModel.location = null;
-				} 
-				else if (this.isValidLocation(location)) {
-					if(this.tracking)
-					{
-						this.communicate.updateGuestLocation(location);
-					}
-					this.locationModel.location = location;
-					console.log("current map = ", this.mapViewModel.getMapByID(location.mapID)?.name)
-				//	console.log("valid location in watch", location)
-				} else {
-					const error = 'Unexpected error, received invalid location';
-					this.locationModel.locationError = error;
-					this.locationModel.location = null;
-					console.log("location error 2 = ", this.locationModel.locationError)
+		if(this.locationModel.locationApproved)
+		{
+			this.locationService.watchLocation(
+				location => {
+					if (!location) {
+						console.log("location not within map")
+						this.locationModel.location = null;
+					} 
+					else if (this.isValidLocation(location)) {
+						if(this.tracking)
+						{
+							this.communicate.updateGuestLocation(location);
+						}
+						this.locationModel.location = location;
+						console.log("current map = ", this.mapViewModel.getMapByID(location.mapID)?.name)
+					//	console.log("valid location in watch", location)
+					} else {
+						const error = 'Unexpected error, received invalid location';
+						this.locationModel.locationError = error;
+						this.locationModel.location = null;
+						console.log("location error 2 = ", this.locationModel.locationError)
 
-				}
-			},
-			error => {
-				this.locationModel.location = null;
-				console.warn('Could not get the user location', error);
-				this.locationModel.locationError = error;
-				console.log("location error 1 = ", this.locationModel.locationError)
-			}
-		);
+					}
+				},
+				error => {
+					this.locationModel.location = null;
+					console.warn('Could not get the user location', error);
+					this.locationModel.locationError = error;
+					console.log("location error 1 = ", this.locationModel.locationError)
+				})
+		}
+		else{
+			this.locationModel.locationError = 'Please approve using location'
+			this.locationModel.location = null;
+		}
 	}
 	public locationNeedsToBeTracked() {
 		this.tracking = true;
@@ -127,7 +140,7 @@ export class MyLocationViewModel {
 	// 	}
 	// }
 	
-	public askLocationApproval = () => {
+	public askLocationApproval() : Promise<string> {
 		const approvingLocationRequest =
 			Platform.OS === 'android'
 				? PermissionsAndroid.request(
