@@ -1,4 +1,4 @@
-import {Location, GPS } from '../types';
+import {Location, GPS} from '../types';
 import MapViewModel from '../ViewModel/MapViewModel';
 import GeolocationAdapter from './GeolocationAdapter';
 
@@ -12,17 +12,21 @@ export default class Geolocation implements ILocationService {
 
 	constructor(mapsViewModel: MapViewModel) {
 		autorun(() => {
-			this.maps = mapsViewModel.getMaps().map(map => new LocationMap(map));
+			this.maps = mapsViewModel
+				.getMaps()
+				.map(map => new LocationMap(map));
 		});
 		this.geolocationAdapter = new GeolocationAdapter();
 	}
 
-	private translateFunction(successCallback: (location: Location | null) => void) {
+	private translateFunction(
+		successCallback: (location: Location | null) => void
+	) {
 		return (location: GPS) => {
 			for (const map of this.maps) {
 				if (map.hasInside(location)) {
 					const newLocation = map.translateGps(location);
-					console.log(newLocation)
+					console.log('current location', newLocation);
 					return successCallback(newLocation);
 				}
 			}

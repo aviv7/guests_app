@@ -7,7 +7,6 @@ export class MyLocationModel {
 	private _hasAskedLocationAtStart: boolean;
 	private _locationError: string | undefined;
 
-
 	private constructor() {
 		this._location = null;
 		this._locationApproved = false;
@@ -30,7 +29,6 @@ export class MyLocationModel {
 		this._location = location;
 	}
 
-	
 	get locationApproved() {
 		return this._locationApproved;
 	}
@@ -38,7 +36,6 @@ export class MyLocationModel {
 	set locationApproved(approved: boolean) {
 		this._locationApproved = approved;
 	}
-
 
 	get hasAskedLocationAtStart() {
 		return this._hasAskedLocationAtStart;
@@ -56,3 +53,5 @@ export class MyLocationModel {
 		return this._locationError;
 	}
 }
+
+export type LocationError = 'Out of bound' | 'Missing premission';

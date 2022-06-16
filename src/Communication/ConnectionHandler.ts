@@ -16,19 +16,21 @@ export default class ConnectionHandler extends Singleton {
 		this.socket = io(configuration['server-url'], {autoConnect: false});
 	}
 
-	public connect(token: string, onSuccess?: () => void, onError?:()=> void): void {
-		if(this.socket.connected)
-		{
+	public connect(
+		token: string,
+		onSuccess?: () => void,
+		onError?: () => void
+	): void {
+		if (this.socket.connected) {
 			return onSuccess?.();
 		}
 		this.socket.auth = {token};
 		this.socket.connect();
 		let returnedResult = false;
-		
+
 		this.socket.on('connect', () => {
 			// Connected successfully to the server
-			if(!returnedResult)
-			{
+			if (!returnedResult) {
 				onSuccess?.();
 			}
 			this.connectionModel.isReconnecting = false;
@@ -70,7 +72,7 @@ export default class ConnectionHandler extends Singleton {
 	private registerEvents(socket: Socket<DefaultEventsMap, DefaultEventsMap>) {
 		for (const event in this.notifications.eventToCallback) {
 			socket.on(event, params => {
-				console.info(`Notification ${event}:`, params);
+				// console.info(`Notification ${event}:`, params);
 				this.notifications.eventToCallback[event](params);
 			});
 		}

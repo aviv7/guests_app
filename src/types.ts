@@ -75,7 +75,7 @@ export type WaiterIDO = {
 	avialabe: boolean;
 };
 
-// -------------------- Location ---------------------- 
+// -------------------- Location ----------------------
 export type MapIDO = {
 	id: string;
 	name: string;
@@ -100,7 +100,6 @@ export type Location = {
 	y: number;
 	mapID: string;
 };
-
 
 export type LocationCoordinates = {
 	x: number;

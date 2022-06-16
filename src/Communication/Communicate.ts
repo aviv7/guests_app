@@ -9,6 +9,8 @@ export default class Communicate implements guestCommunication {
 	}
 
 	updateGuestLocation(guestLocation: Location): void {
-		this.connectionHandler.send('updateGuestLocation', {location: {...guestLocation, mapID: "Random Map ID"}});
+		this.connectionHandler.send('updateGuestLocation', {
+			location: {...guestLocation, mapID: guestLocation.mapID},
+		});
 	}
 }
