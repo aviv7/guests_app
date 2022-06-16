@@ -133,7 +133,7 @@ export const OrderView = observer((props: OrderPageViewProps) => {
 						.then(() => setItemsModalVisible(true))
 						.catch(() =>
 							Alert.alert(
-								'You must approve location for creating an order'
+								'You must have valid location in order to create an order'
 							)
 						)
 				}

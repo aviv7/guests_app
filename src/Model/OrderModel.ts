@@ -1,5 +1,5 @@
 import {makeAutoObservable} from 'mobx';
-import Location, {ItemIDO, Order, OrderID, OrderStatus, Waiter} from '../types';
+import {Location, ItemIDO, Order, OrderID, OrderStatus, Waiter} from '../types';
 
 export class OrderModel {
 	private _order: Order | null;

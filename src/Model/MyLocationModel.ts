@@ -11,6 +11,7 @@ export class MyLocationModel {
 		this._location = null;
 		this._locationApproved = false;
 		this._hasAskedLocationAtStart = false;
+		this._locationError = undefined;
 		makeAutoObservable(this);
 	}
 	static instance?: MyLocationModel;

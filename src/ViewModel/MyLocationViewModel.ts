@@ -89,17 +89,13 @@ export class MyLocationViewModel {
 
 	public startWatchingLocation() {
 		if (this.locationModel.locationApproved) {
+			console.log("in watch - location approved")
 			this.locationService.watchLocation(
 				location => {
 					if (!location) {
-						console.log('location not within map2');
 						this.locationModel.location = null;
 						this.locationModel.locationError =
-							'Out of service bound';
-						console.log(
-							'********',
-							this.locationModel.locationError
-						);
+							'Your location is out of service bound';
 					} else if (this.isValidLocation(location)) {
 						if (this.tracking) {
 							this.communicate.updateGuestLocation(location);

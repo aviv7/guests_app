@@ -50,29 +50,55 @@ function MapScreenController(): JSX.Element {
 	};
 	
 	function onStart(){
-		if(orderViewModel.hasActiveOrder()){
-			locationViewModel.locationNeedsToBeTracked();
-			locationViewModel.askLocationApproval()
-			.then(() =>{locationViewModel.startWatchingLocation();})
-			.catch(() => Alert.alert("You have an active order, Please approve using your location"))
-			locationViewModel.AskedLocationAtStart();
-		}
-		else{
-			locationViewModel.stopTrackingLocation();
-		}
-
 		if(!locationViewModel.getHasAskedLocationAtStart())
-		{	
-			console.log("asking location at start -- ")
-			locationViewModel.askLocationApproval()
-			.then(() => locationViewModel.startWatchingLocation())
-			locationViewModel.AskedLocationAtStart();
+		{
+			if(orderViewModel.hasActiveOrder()){
+				locationViewModel.locationNeedsToBeTracked();
+				locationViewModel.askLocationApproval()
+				.then(() =>{locationViewModel.startWatchingLocation();})
+				.catch(() => Alert.alert("You have an active order, Please approve using your location"));
+				
+				locationViewModel.getLocationPoint();
+				if(locationViewModel.getLocation() === null) // if GPS is turned off
+				{
+					Alert.alert("You have an active order! Please notice location error")
+				}
+				locationViewModel.AskedLocationAtStart()
+			}
+			else{
+				locationViewModel.stopTrackingLocation();
+			}
+			if(!locationViewModel.getHasAskedLocationAtStart())
+			{	
+				console.log("asking location at start -- ")
+				locationViewModel.askLocationApproval()
+				.then(() => locationViewModel.startWatchingLocation())
+				locationViewModel.AskedLocationAtStart();
+			}
 		}
-		// locationViewModel.getLocationPoint();
-		// if(locationViewModel.getLocation() === null)
-		// {
-		// 	console.log("on start, location refuse 2");
-		// 	onLocationRefuse();
+		// if(orderViewModel.hasActiveOrder()){
+		// 	locationViewModel.locationNeedsToBeTracked();
+		// 	locationViewModel.askLocationApproval()
+		// 	.then(() =>{locationViewModel.startWatchingLocation();})
+		// 	.catch(() => Alert.alert("You have an active order, Please approve using your location"))
+		// 	locationViewModel.AskedLocationAtStart();
+			
+		// 	locationViewModel.getLocationPoint();
+		// 	if(locationViewModel.getLocation() === null) // if GPS is turned off
+		// 	{
+		// 		Alert.alert("You have an active order, Please turn on GPS")
+		// 	}
+		// }
+		// else{
+		// 	locationViewModel.stopTrackingLocation();
+		// }
+
+		// if(!locationViewModel.getHasAskedLocationAtStart())
+		// {	
+		// 	console.log("asking location at start -- ")
+		// 	locationViewModel.askLocationApproval()
+		// 	.then(() => locationViewModel.startWatchingLocation())
+		// 	locationViewModel.AskedLocationAtStart();
 		// }
 	}
 	onStart();
