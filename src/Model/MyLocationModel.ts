@@ -55,4 +55,3 @@ export class MyLocationModel {
 	}
 }
 
-export type LocationError = 'Out of bound' | 'Missing premission';

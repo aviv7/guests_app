@@ -13,4 +13,10 @@ export default class Communicate implements guestCommunication {
 			location: {...guestLocation, mapID: guestLocation.mapID},
 		});
 	}
+
+	locationErrorGuest(errorMsg: string): void{
+		this.connectionHandler.send('locationErrorGuest', {
+			errorMsg: errorMsg,
+		});
+	}
 }

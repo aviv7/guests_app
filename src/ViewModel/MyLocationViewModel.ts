@@ -6,12 +6,10 @@ import configuration from '../../configuration.json';
 import {PermissionsAndroid, Platform} from 'react-native';
 import MapViewModel from './MapViewModel';
 
-// const corners: Corners = {
-// 	bottomRightGPS: configuration.corners['bottom-right-gps'],
-// 	bottomLeftGPS: configuration.corners['bottom-left-gps'],
-// 	topRightGPS: configuration.corners['top-right-gps'],
-// 	topLeftGPS: configuration.corners['top-left-gps'],
-// };
+enum LocationError {
+	OutOfBound = "Location is out of service bound",
+	UnAvailableProvider = "No location provider available",
+  }
 
 export class MyLocationViewModel {
 	private locationModel: MyLocationModel;
@@ -33,105 +31,114 @@ export class MyLocationViewModel {
 		return isValidNumber(location.x) && isValidNumber(location.y);
 	}
 
-	// public startTrackingLocation() {
-	// 	this.tracking = true;
-	//     this.locationService.watchLocation(
-	//         location => {
-	//             if (this.isValidLocation(location)) {
-	// 				if(this.tracking){
-	// 					this.communicate.updateGuestLocation(location);
-	// 					this.locationModel.location = location;
-	// 				}
-	//             } else {
-	//                 console.warn(
-	//                     'An invalid location has been received from the location service',
-	//                     location
-	//                 );
-	//             }
-	//         },
-	//         error => {
-	//             console.warn('Could not get the user location', error);
-	//         }
-	//     );
-	// }
-
-	public getLocationPoint() {
+	private activateLocation(action: string)
+	{
 		if (this.locationModel.locationApproved) {
-			this.locationService.getLocation(
-				location => {
-					if (!location) {
-						// if location is within the map
-						console.log('location not within map1');
-						this.locationModel.location = null;
-						this.locationModel.locationError =
-							'Out of service bound';
-					} else if (this.isValidLocation(location)) {
-						this.locationModel.location = location;
-						this.locationModel.locationError = undefined;
-					} else {
-						const error =
-							'Unexpected error, received invalid location';
-						this.locationModel.locationError = error;
-						this.locationModel.location = null;
-					}
-				},
-				error => {
+			let successCallback = (location : Location | null) =>
+			{
+				if (!location) {
 					this.locationModel.location = null;
-					console.warn('Could not get the user location', error);
-					this.locationModel.locationError = error;
-				}
-			);
-		} else {
-			this.locationModel.locationError = 'Please approve using location';
-			this.locationModel.location = null;
-		}
-	}
-
-	public startWatchingLocation() {
-		if (this.locationModel.locationApproved) {
-			console.log("in watch - location approved")
-			this.locationService.watchLocation(
-				location => {
-					if (!location) {
-						this.locationModel.location = null;
-						this.locationModel.locationError =
-							'Your location is out of service bound';
-					} else if (this.isValidLocation(location)) {
-						if (this.tracking) {
-							this.communicate.updateGuestLocation(location);
-						}
-						this.locationModel.location = location;
-						this.locationModel.locationError = undefined;
-						console.log(
-							'current map = ',
-							this.mapViewModel.getMapByID(location.mapID)?.name
-						);
-						//	console.log("valid location in watch", location)
-					} else {
-						const error =
-							'Unexpected error, received invalid location';
-						this.locationModel.locationError = error;
-						this.locationModel.location = null;
-						console.log(
-							'location error 2 = ',
-							this.locationModel.locationError
-						);
+					if(this.locationModel.locationError != LocationError.OutOfBound)
+						this.communicate.locationErrorGuest(LocationError.OutOfBound)
+					this.locationModel.locationError = LocationError.OutOfBound;
+					
+				} else if (this.isValidLocation(location)) {
+					if (this.tracking) {
+						this.communicate.updateGuestLocation(location);
 					}
-				},
-				error => {
-					this.locationModel.location = null;
-					console.warn('Could not get the user location', error);
-					this.locationModel.locationError = error;
+					this.locationModel.location = location;
+					this.locationModel.locationError = undefined;
 					console.log(
-						'location error 1 = ',
+						'current map = ',
+						this.mapViewModel.getMapByID(location.mapID)?.name
+					);
+					//	console.log("valid location in watch", location)
+				} else {
+					const error =
+						'Unexpected error, received invalid location';
+					if(error != this.locationModel.locationError)
+						this.communicate.locationErrorGuest(error)
+					this.locationModel.locationError = error;
+					this.locationModel.location = null;
+					console.log(
+						'location error 2 = ',
 						this.locationModel.locationError
 					);
 				}
-			);
-		} else {
+			}
+			let errorCallback = (error: string) => {
+				this.locationModel.location = null;
+				console.warn('Could not get the user location', error);
+				if(error != this.locationModel.locationError)
+					this.communicate.locationErrorGuest(error)
+				this.locationModel.locationError = error;
+			}
+			if(action === "get")
+			{
+				this.locationService.getLocation(successCallback,errorCallback)
+			}
+			if(action === "watch")
+			{
+				this.locationService.watchLocation(successCallback,errorCallback)
+			}
+		}
+		else {
 			this.locationModel.locationError = 'Please approve using location';
 			this.locationModel.location = null;
 		}
+	} 
+
+	public getLocationPoint() {
+			this.activateLocation("get");
+	}
+
+	public startWatchingLocation() {
+		// if (this.locationModel.locationApproved) {
+			this.activateLocation("watch");
+			// this.locationService.watchLocation(
+			// 	location => {
+			// 		if (!location) {
+			// 			this.locationModel.location = null;
+			// 			if(this.locationModel.locationError != LocationError.OutOfBound)
+			// 				this.communicate.locationErrorGuest(LocationError.OutOfBound)
+			// 			this.locationModel.locationError = LocationError.OutOfBound;
+						
+			// 		} else if (this.isValidLocation(location)) {
+			// 			if (this.tracking) {
+			// 				this.communicate.updateGuestLocation(location);
+			// 			}
+			// 			this.locationModel.location = location;
+			// 			this.locationModel.locationError = undefined;
+			// 			console.log(
+			// 				'current map = ',
+			// 				this.mapViewModel.getMapByID(location.mapID)?.name
+			// 			);
+			// 			//	console.log("valid location in watch", location)
+			// 		} else {
+			// 			const error =
+			// 				'Unexpected error, received invalid location';
+			// 			if(error != this.locationModel.locationError)
+			// 				this.communicate.locationErrorGuest(error)
+			// 			this.locationModel.locationError = error;
+			// 			this.locationModel.location = null;
+			// 			console.log(
+			// 				'location error 2 = ',
+			// 				this.locationModel.locationError
+			// 			);
+			// 		}
+			// 	},
+			// 	error => {						
+			// 		this.locationModel.location = null;
+			// 		if(error != this.locationModel.locationError)
+			// 			this.communicate.locationErrorGuest(error)
+			// 		console.warn('Could not get the user location', error);
+			// 		this.locationModel.locationError = error;
+			// 	}
+		// 	// );
+		// } else {
+		// 	this.locationModel.locationError = 'Please approve using location';
+		// 	this.locationModel.location = null;
+		// }
 	}
 	public locationNeedsToBeTracked() {
 		this.tracking = true;
@@ -140,14 +147,6 @@ export class MyLocationViewModel {
 	public stopTrackingLocation() {
 		this.tracking = false;
 	}
-
-	// async function requestPermissions() {
-	// 	if (Platform.OS === 'android') {
-	// 		return	await PermissionsAndroid.request(
-	// 			PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-	// 		)
-	// 	}
-	// }
 
 	public askLocationApproval(): Promise<string> {
 		const approvingLocationRequest =
@@ -205,13 +204,6 @@ export class MyLocationViewModel {
 	stopTracking() {
 		this.tracking = false;
 	}
-
-	// get isCurrentLocationOutOfBound(): boolean {
-	// 	return (
-	// 		this.locationModel.location === null &&
-	// 		this.locationModel.locationError === undefined
-	// 	);
-	// }
 
 	getCurrentLocationError(): string | undefined {
 		return this.locationModel.locationError;
