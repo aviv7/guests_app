@@ -52,10 +52,10 @@ export const RenderItem = ({item, onAddToCart}:{item:ItemIDO, onAddToCart: (item
 
             </View>
             <View style={styles.updateButtons} >
-              <Button
+              {/* <Button
                   title="update"
                   onPress={()=>onAddToCart(item,amount)}
-               />
+               /> */}
             </View>
           </View>
         </View>

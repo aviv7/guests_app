@@ -24,12 +24,12 @@ export const ItemListView = observer((props: ItemListViewProps) => {
   return (
      <View>
         {props.itemsMenu.map((item)=> <RenderItem key={item.id} item={item} onAddToCart={props.onAddToCart} />)}
-        <Text style={styles.largeText}>
+        {/* <Text style={styles.largeText}>
           {'\tYour current order - \n'}
         </Text>
-        <Text style={styles.largeText}> {create(props.itemsToOrder)}  </Text>
+        <Text style={styles.largeText}> {create(props.itemsToOrder)}  </Text> */}
         
-        <Text style={styles.largeText}>{'\tTotal Preparation time = '} {props.orderPreparationTime}</Text>
+        <Text style={styles.largeText}>{'\tTotal Preparation time: '} {props.orderPreparationTime}</Text>
      </View>
   );
 });
