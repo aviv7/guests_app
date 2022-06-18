@@ -33,6 +33,8 @@ export default class ConnectionViewModel {
 		return this.model;
 	}
 
+	/* connection will succeed only when all the data required for initialization 
+	   will be retrieved from the server */
 	public connect() {
 		const promises = [
 			this.maps.syncMaps(),

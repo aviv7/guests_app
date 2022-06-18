@@ -87,58 +87,13 @@ export class MyLocationViewModel {
 			this.locationModel.location = null;
 		}
 	} 
-
+	// updates location for only 1 point
 	public getLocationPoint() {
-			this.activateLocation("get");
+		this.activateLocation("get");
 	}
-
+	// updates location continuously
 	public startWatchingLocation() {
-		// if (this.locationModel.locationApproved) {
-			this.activateLocation("watch");
-			// this.locationService.watchLocation(
-			// 	location => {
-			// 		if (!location) {
-			// 			this.locationModel.location = null;
-			// 			if(this.locationModel.locationError != LocationError.OutOfBound)
-			// 				this.communicate.locationErrorGuest(LocationError.OutOfBound)
-			// 			this.locationModel.locationError = LocationError.OutOfBound;
-						
-			// 		} else if (this.isValidLocation(location)) {
-			// 			if (this.tracking) {
-			// 				this.communicate.updateGuestLocation(location);
-			// 			}
-			// 			this.locationModel.location = location;
-			// 			this.locationModel.locationError = undefined;
-			// 			console.log(
-			// 				'current map = ',
-			// 				this.mapViewModel.getMapByID(location.mapID)?.name
-			// 			);
-			// 			//	console.log("valid location in watch", location)
-			// 		} else {
-			// 			const error =
-			// 				'Unexpected error, received invalid location';
-			// 			if(error != this.locationModel.locationError)
-			// 				this.communicate.locationErrorGuest(error)
-			// 			this.locationModel.locationError = error;
-			// 			this.locationModel.location = null;
-			// 			console.log(
-			// 				'location error 2 = ',
-			// 				this.locationModel.locationError
-			// 			);
-			// 		}
-			// 	},
-			// 	error => {						
-			// 		this.locationModel.location = null;
-			// 		if(error != this.locationModel.locationError)
-			// 			this.communicate.locationErrorGuest(error)
-			// 		console.warn('Could not get the user location', error);
-			// 		this.locationModel.locationError = error;
-			// 	}
-		// 	// );
-		// } else {
-		// 	this.locationModel.locationError = 'Please approve using location';
-		// 	this.locationModel.location = null;
-		// }
+		this.activateLocation("watch");
 	}
 	public locationNeedsToBeTracked() {
 		this.tracking = true;

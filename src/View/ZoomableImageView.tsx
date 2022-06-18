@@ -42,25 +42,6 @@ export default function MyZoomableImage(props: MyZoomableImageProps) {
 	return (
 		<View style={props.style} {...props.panHandlers}>
 			<View style={styles.container}>	
-				
-			{/* {props.pointOfInterest !== null && (
-				<View
-					style={[
-						styles.marker,
-						{
-							top:
-								props.pointOfInterest.point.location.y *
-								props.imageHeight *
-								props.zoom,
-							left:
-								props.pointOfInterest.point.location.x *
-								props.imageWidth *
-								props.zoom,
-						},
-					]}>
-					<props.pointOfInterest.marker name={props.pointOfInterest.point.name} scale={props.zoom} />
-				</View> 
-			)} */}
 
 			{props.pointsOfInterest.map((pointAndMarker, index) => {
 					const point = pointAndMarker.point;

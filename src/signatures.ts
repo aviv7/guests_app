@@ -29,6 +29,7 @@ export interface GuestAPI {
 
 export interface guestCommunication {
 	updateGuestLocation: (guestLocation: Location) => void;
+	locationErrorGuest: (errorMsg: string) => void;
 }
 
 // guests Notifications from server:

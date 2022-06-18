@@ -33,14 +33,6 @@ export default class Geolocation implements ILocationService {
 		};
 	}
 
-	/* OLD - working */
-	// private translateFunction(successCallback: (location: Location) => void) {
-	// 	return (location: GPS) => {
-	// 		const newLocation = this.map.translateGps(location);
-	// 		successCallback(newLocation);
-	// 	};
-	// }
-
 	watchLocation(
 		successCallback: (location: Location | null) => void,
 		errorCallback: (error: string) => void

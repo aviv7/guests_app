@@ -6,17 +6,9 @@ import WarningsView from '../View/WarningsView';
 const WarningsController = observer((): JSX.Element => {
 	const myLocation = useContext(MyLocationContext);
 
-	// const outOfBound = myLocation.isCurrentLocationOutOfBound;
 	let currentLocationError = myLocation.getCurrentLocationError();
 
 	console.log('curent location error - ', currentLocationError);
-
-	// const warnings = [
-	// 	...(outOfBound ? ["You're out side of the service area"] : []),
-	// 	...(currentLocationError
-	// 		? [`Could not get your location - ${currentLocationError}`]
-	// 		: []),
-	// ];
 
 	let warnings = currentLocationError ? [currentLocationError] : [];
 	//warnings.push('junk error');

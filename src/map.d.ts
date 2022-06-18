@@ -15,9 +15,4 @@ export type MarkerProps = {
 	scale: number;
 };
 
-// export type GPS = {
-// 	longitude: number;
-// 	latitude: number;
-// };
-
 export type Marker = (props: MarkerProps) => React.ReactElement;

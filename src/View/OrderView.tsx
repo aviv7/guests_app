@@ -46,7 +46,8 @@ export const OrderView = observer((props: OrderPageViewProps) => {
 	const [reviewModalVisible, setReviewModalVisible] = useState(false);
 
 	if (props.hasActiveOrder) {
-		if (props.orderStatus === 'delivered') {
+		if (props.orderStatus === 'delivered') { 
+			/* review page */
 			return (
 				<View style={styles.container}>
 					<Text style={styles.title}>Your order has arrived!</Text>
@@ -103,6 +104,7 @@ export const OrderView = observer((props: OrderPageViewProps) => {
 				</View>
 			);
 		}
+		/* there is an active order and its status isnt 'delivered' yet */
 		return (
 			<View>
 				<Button
@@ -119,6 +121,7 @@ export const OrderView = observer((props: OrderPageViewProps) => {
 			</View>
 		);
 	}
+	/* if there is no active order */
 	return (
 		<View>
 			<Text style={styles.largeText}>
@@ -132,13 +135,12 @@ export const OrderView = observer((props: OrderPageViewProps) => {
 						.requestLocation()
 						.then(() => setItemsModalVisible(true))
 						.catch(() =>
-							Alert.alert(
-								'You must have valid location in order to create an order'
-							)
-						)
+							Alert.alert('Create order failed', 
+							'You must have valid location in order to create an order'))
 				}
 			/>
 			<View style={styles.separator} />
+			{/* Items Modal is the floating window for creating an order */}
 			<Modal isVisible={itemsModalVisible}>
 				<Modal.Container>
 					<View style={styles.modalGeneral}>
@@ -163,8 +165,7 @@ export const OrderView = observer((props: OrderPageViewProps) => {
 									title='Submit Order'
 									onPress={() => {
 										props.SendOrderToServer();
-									}}
-								/>
+									}}/>
 								<View style={styles.space} />
 								<Button
 									title='Exit Order'
@@ -184,7 +185,7 @@ export const OrderView = observer((props: OrderPageViewProps) => {
 
 const styles = StyleSheet.create({
 	space: {
-		width: 20, // or whatever size you need
+		width: 20, 
 		height: 20,
 	},
 	container: {
@@ -240,7 +241,3 @@ const styles = StyleSheet.create({
 		marginHorizontal: 20,
 	},
 });
-
-function setOpenText(feedback: string): void {
-	throw new Error('Function not implemented.');
-}

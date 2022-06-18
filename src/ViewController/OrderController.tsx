@@ -24,13 +24,14 @@ const OrderController = observer((_props: OrderControllerProps) => {
 					startWaitingForOrder();
 				})
 			.catch(err =>{
-					let msg = 'failed to create order due to ' 
+					let msg = 'failed to create order due to:' 
+					let description = ''
 					if(err.response && err.response.data)
-						msg = msg + err.response.data
+						description = description + err.response.data
 					else
-						msg = msg + err
+						description = description + err
 					Alert.alert(
-						msg
+						msg,description
 					)
 				}
 			);
@@ -47,7 +48,7 @@ const OrderController = observer((_props: OrderControllerProps) => {
 		orderViewModel
 			.cancelOrder()
 			.then(() =>{Alert.alert('order canceled succesfully');})
-			.catch(err => Alert.alert('failed to cancel order due to: ' + err));
+			.catch(err => Alert.alert('failed to cancel order due to:\n', err));
 	}
 
 	function requestLocationForOrder() {

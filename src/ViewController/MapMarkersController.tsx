@@ -7,7 +7,7 @@ import {observer} from 'mobx-react-lite';
 import MapLayoutController from './MapLayoutController';
 import { MyLocationContext, OrdersContext } from '../contexts';
 import { PointMarker } from '../map';
-import WaiterMarker, { ActiveGuestMarker, InActiveGuestMarker } from '../View/markers/WaiterMarker';
+import WaiterMarker, { ActiveGuestMarker, InActiveGuestMarker } from '../View/markers/Markers';
 import {Location} from '../types';
 
 type MapMarkerControllerProps = {
@@ -15,9 +15,7 @@ type MapMarkerControllerProps = {
 };
 
 function createGuestMarker(myLocation: Location | null): PointMarker {
-	//console.log("guest location marker: ", myLocation)
 	if(myLocation != null)
-	//	return {point:{name: 'Personal', location: myLocation}, marker: ActiveGuestMarker} 
 		return {point:{name: 'Personal', location:myLocation}, marker: ActiveGuestMarker} 
 
 	else

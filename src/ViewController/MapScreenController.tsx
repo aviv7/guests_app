@@ -56,12 +56,12 @@ function MapScreenController(): JSX.Element {
 				locationViewModel.locationNeedsToBeTracked();
 				locationViewModel.askLocationApproval()
 				.then(() =>{locationViewModel.startWatchingLocation();})
-				.catch(() => Alert.alert("You have an active order, Please approve using your location"));
+				.catch(() => Alert.alert("You have an active order!\nPlease approve using your location"));
 				
 				locationViewModel.getLocationPoint();
 				if(locationViewModel.getLocation() === null) // if GPS is turned off
 				{
-					Alert.alert("You have an active order! Please notice location error")
+					Alert.alert("You have an active order!\nPlease notice for location errors")
 				}
 				locationViewModel.AskedLocationAtStart()
 			}

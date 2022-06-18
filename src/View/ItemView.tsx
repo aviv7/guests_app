@@ -32,7 +32,12 @@ export const RenderItem = ({item, onAddToCart}:{item:ItemIDO, onAddToCart: (item
                   title=" - "
                   color='turquoise'
                   onPress={() => {
-                        if(amount > 0) setAmount(amount - 1)
+                        if(amount > 0) 
+                        {
+                          const newAmount = amount - 1;
+                          setAmount(newAmount)
+                          onAddToCart(item,newAmount)
+                        }
                     }}
                   disabled={amount <= 0 }
                 />
@@ -40,7 +45,9 @@ export const RenderItem = ({item, onAddToCart}:{item:ItemIDO, onAddToCart: (item
                 <Button
                   color='turquoise'
                   title=" + "
-                  onPress={() => setAmount(amount + 1)}
+                  onPress={() => {const newAmount = amount + 1;
+                                  setAmount(newAmount);  
+                                  onAddToCart(item,newAmount)}}
                />
 
             </View>

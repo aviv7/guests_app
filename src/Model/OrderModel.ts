@@ -4,13 +4,14 @@ import {Location, ItemIDO, Order, OrderID, OrderStatus, Waiter} from '../types';
 export class OrderModel {
 	private _order: Order | null;
 	private _waiters: Waiter[];
-	// private _itemsToOrder: Map<string, Number>;
-	// private _orderedItems: Map<string, Number>;
 
-	private _itemsToOrder: Record<string, number>;
+	// items ids and amounts of the order being created by the guest
+	private _itemsToOrder: Record<string, number>; 
+	// items ids and amounts of the ordered order (if exists)
 	private _orderedItems: Record<string, number>;
-	
+	// list of the items selected to order (amount > 0)
 	private _itemsSelected: ItemIDO[];
+	// preparation time of the entire order
 	private _orderPreparationTime: number;
 
 	private constructor() {
@@ -30,6 +31,7 @@ export class OrderModel {
 		return this.instance;
 	}
 
+	// adds the item to the order when amount > 0, removes the item when amount = 0
 	updateItemToOrder(item: ItemIDO,amount:number){
 
 		if(item.id in this._itemsToOrder)
@@ -53,21 +55,7 @@ export class OrderModel {
 				this._itemsSelected.push(item);
 				this.updatePreparationTime();
 			}
-		}
-
-
-		// if(amount == 0)
-		// {
-		// 	if(item.id in this._itemsToOrder)
-		// 	{
-		// 		delete this._itemsToOrder[item.id]
-		// 	}
-		// 	this._itemsSelected.filter(selected_item => selected_item.id !== item.id)
-		// }
-		// else
-		// 	this._itemsToOrder[item.id] = amount;
-
-		
+		}	
 	}
 	private updatePreparationTime() : void{
 		if(this._itemsSelected.length > 1)

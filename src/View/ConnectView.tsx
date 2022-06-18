@@ -1,6 +1,5 @@
 import React from 'react';
 import {Button, StyleSheet, Text, TextInput} from 'react-native';
-import {MainPageViewController} from '../ViewController/MainPageViewController';
 import MapScreenController from '../ViewController/MapScreenController';
 
 type LoginViewProps = {

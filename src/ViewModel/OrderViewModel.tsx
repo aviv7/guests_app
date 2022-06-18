@@ -11,6 +11,10 @@ export default class OrderViewModel {
 		this.requests = requests;
 	}
 
+	/* 
+	The function tries to get the guest order from server 
+	If the server response is negative, removes order from model
+	*/
 	getOrderFromServer() {
 		return this.requests
 			.getGuestOrder()
@@ -52,11 +56,11 @@ export default class OrderViewModel {
 				});
 			}
 			return new Promise((_resolve, reject) =>
-				reject('createOrder called when order already exists')
+				reject('create order called when order already exists')
 			);
 		}
 		return new Promise((_resolve, reject) =>
-				reject('createOrder called with 0 items to oreder')
+				reject('create order called with 0 items to order')
 			);
 	}
 
@@ -70,11 +74,11 @@ export default class OrderViewModel {
 				});
 			}
 			return new Promise((_resolve, reject) =>
-				reject("cancelOrder called when order status isn't received")
+				reject("cancel order called when order status isn't 'received'")
 			);
 		}
 		return new Promise((_resolve, reject) =>
-			reject("cancelOrder called when order doesn't exists")
+			reject("cancel order called when order doesn't exists")
 		);
 	}
 
@@ -86,11 +90,11 @@ export default class OrderViewModel {
 				.finally(() => this.order_model.removeOrder());
 			}
 			return new Promise((_resolve, reject) =>
-				reject("submitReview called when order status isn't delivered")
+				reject("submit review called when order status isn't 'delivered'")
 			);
 		}
 		return new Promise((_resolve, reject) =>
-			reject("submitReview called when order doesn't exists")
+			reject("submit review called when order doesn't exists")
 		);
 	}
 
@@ -102,6 +106,7 @@ export default class OrderViewModel {
 			}
 		}
 	}
+	/* Updates an amount of an item in the order the guest creates */
 	updateItemToOrder(item: ItemIDO,amount: number)
 	{
 		this.order_model.updateItemToOrder(item,amount);

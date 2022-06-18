@@ -29,12 +29,4 @@ export default class MapViewModel {
 			this.mapsModel.maps = maps;
 		});
 	}
-	
-	// getMapDetails(): MapDetails {
-	// 	return {
-	// 		id: '',
-	// 		name: '',
-	// 		imageURL: configuration['map-image-url'],
-	// 	};
-	// }
 }

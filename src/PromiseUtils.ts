@@ -1,3 +1,5 @@
+// help functions for tests
+
 export function makePromise<T>(value: T): Promise<T> {
 	return new Promise<T>(resolve => resolve(value));
 }
