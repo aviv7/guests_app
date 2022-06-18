@@ -34,8 +34,15 @@ class RequestsHandler {
 		)
 			.then(response => this.handleResponse<T>(response))
 			.catch(e => {
-				console.log(e.response.data);
-				return Promise.reject(e);
+				if (e.response.status === 401) {
+					//Unauthorized
+					this.connection.token = null;
+					return Promise.reject(e);
+				}
+				else{
+					console.log(e.response.data);
+					return Promise.reject(e);
+				}
 			});
 	}
 
