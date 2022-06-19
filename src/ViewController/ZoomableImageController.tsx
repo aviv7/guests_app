@@ -31,6 +31,8 @@ type MyZoomableImageProps = {
 	pointsOfInterest: PointMarker[];
 };
 const MAX_ZOOM = 3.5;
+const clamp = (min: number, max: number, value: number) =>
+	Math.max(Math.min(min, value), max);
 
 export default function MyZoomableImage({
 	imageWidth,
@@ -55,24 +57,18 @@ export default function MyZoomableImage({
 
 	const safeSetTop = useCallback(
 		(set: (top: number) => number) => {
-			setTop(top => {
-				let newTop = set(top);
-				newTop = Math.min(0, newTop);
-				newTop = Math.max(parentHeight - imageHeight * zoom, newTop);
-				return newTop;
-			});
+				setTop(oldTop =>
+				clamp(0, parentHeight - imageHeight * zoom, set(oldTop))
+			);
 		},
 		[imageHeight, zoom, parentHeight]
 	);
 
 	const safeSetLeft = useCallback(
 		(set: (left: number) => number) => {
-			setLeft(left => {
-				let newLeft = set(left);
-				newLeft = Math.min(0, newLeft);
-				newLeft = Math.max(parentWidth - imageWidth * zoom, newLeft);
-				return newLeft;
-			});
+			setLeft(oldLeft =>
+				clamp(0, parentWidth - imageWidth * zoom, set(oldLeft))
+			);
 		},
 		[imageWidth, zoom, parentWidth]
 	);
@@ -82,9 +78,16 @@ export default function MyZoomableImage({
 		// imageWidth * zoom >= dimension.width -> zoom >= dimensions.width/imageWidth
 		const minZoomHeight = parentHeight / imageHeight;
 		const minZoomWidth = parentWidth / imageWidth;
-		const minZoom = Math.max(minZoomHeight, minZoomWidth);
-		setMinZoom(minZoom);
-		setZoom(minZoom);
+		const newMinZoom = Math.max(minZoomHeight, minZoomWidth);
+		setMinZoom(newMinZoom);
+		setZoom(newMinZoom);
+		// Updates the current map configuration on map's image change
+		setLeft(oldLeft =>
+			clamp(0, parentWidth - imageWidth * newMinZoom, oldLeft)
+		);
+		setTop(oldTop =>
+			clamp(0, parentHeight - imageHeight * newMinZoom, oldTop)
+		);
 	}, [imageHeight, imageWidth, parentHeight, parentWidth]);
 
 	function processPinch(touch1: NativeTouchEvent, touch2: NativeTouchEvent) {

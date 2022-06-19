@@ -61,7 +61,7 @@ function MapScreenController(): JSX.Element {
 				locationViewModel.getLocationPoint();
 				if(locationViewModel.getLocation() === null) // if GPS is turned off
 				{
-					Alert.alert("You have an active order!\nPlease notice for location errors")
+					Alert.alert("You have an active order!" ,"Make sure your location is shown correctly on map")
 				}
 				locationViewModel.AskedLocationAtStart()
 			}
