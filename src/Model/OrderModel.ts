@@ -80,7 +80,6 @@ export class OrderModel {
 	removeOrder() {
 		this._order = null;
 		this._waiters = [];
-		// this._orderedItems.clear();
 		this._orderedItems = {};
 	}
 
@@ -94,11 +93,13 @@ export class OrderModel {
 	}
 
 	updateWaiterLocation(waiterId: string, waiterLocation: Location) {
-		const waiter = this._waiters.find(waiter => waiter.id === waiterId);
-		if (waiter) {
-			waiter.location = waiterLocation;
-		} else {
-			this._waiters.push({id: waiterId, location: waiterLocation});
+		if (this._order != null) {
+			const waiter = this._waiters.find(waiter => waiter.id === waiterId);
+			if (waiter) {
+				waiter.location = waiterLocation;
+			} else {
+				this._waiters.push({id: waiterId, location: waiterLocation});
+			}
 		}
 	}
 

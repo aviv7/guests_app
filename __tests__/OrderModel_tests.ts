@@ -1,5 +1,5 @@
 import { OrderModel } from "../src/Model/OrderModel";
-import { ItemIDO } from "../src/types";
+import {Location, ItemIDO } from "../src/types";
 
 let orderModel = OrderModel.getInstance();
 let item_id1 = "item1"
@@ -13,7 +13,8 @@ let item2:ItemIDO = {id: item_id2, name: 'Bamba', price: 5, preparationTime: 5};
 describe('tests', () => {
 
     beforeEach(() => {
-        orderModel.clearItemsToOrder();    
+        orderModel.clearItemsToOrder();   
+        orderModel.removeOrder(); 
     });
 
 	it('items can be added to order', () => {
@@ -73,5 +74,31 @@ describe('tests', () => {
         expect(orderModel.orderPreparationTime == 0).toBeTruthy();
         
     })
+
+    it('location of a new waiter can be upadted' ,() =>{
+        orderModel.order = {id:'123', items: {[item_id1]: 2, [item_id2]: 1}, status:'received'}
+        let waiterId = '123'
+        orderModel.updateWaiterLocation(waiterId, {x:0.5,y:0.5, mapID: '1'})
+        expect(orderModel.waiters.map(waiter => waiter.id).includes(waiterId)).toBeTruthy()
+    })
+
+    it('location of a waiter can be upadted few times' ,() =>{
+        orderModel.order = {id:'123', items: {[item_id1]: 2, [item_id2]: 1}, status:'received'}
+        let waiterId = '123'
+        let waiterLocation = {x:0.5,y:0.5, mapID: '1'}
+        orderModel.updateWaiterLocation(waiterId, waiterLocation)
+        expect(JSON.stringify(orderModel.waiters.filter(waiter => waiter.id == waiterId)[0].location) === JSON.stringify(waiterLocation)).toBeTruthy()
+        let newWaiterLocation = {x:0.6,y:0.5, mapID: '1'}
+        orderModel.updateWaiterLocation(waiterId, newWaiterLocation)
+        expect(JSON.stringify(orderModel.waiters.filter(waiter => waiter.id == waiterId)[0].location) === JSON.stringify(newWaiterLocation)).toBeTruthy()
+    })
+
+    it('location of a new waiter ignored when no order exists' ,() =>{
+        let waiterId = '123'
+        orderModel.updateWaiterLocation(waiterId, {x:0.5,y:0.5, mapID: '1'})
+        expect(orderModel.waiters.map(waiter => waiter.id).includes(waiterId)).toBeFalsy()
+    })
+   
+
 });
 

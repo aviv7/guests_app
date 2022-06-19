@@ -184,6 +184,21 @@ describe('cancel order tests', () => {
 		.then(()=> expect(true).toBeFalsy())
 		.catch(() => expect(orderViewModel.hasActiveOrder()).toBeFalsy() )
 	});
+	it('cancel order fails and order doesnt removed when order status isnt received', async () => {
+		mockGetGuestOrder.mockImplementation(() =>mockMakePromise(orderAtServer));
+		
+		const requests = new Requests();
+		const orderViewModel = new OrderViewModel(requests);
+		await orderViewModel.getOrderFromServer();
+		orderViewModel.updateOrderStatus(orderAtServer.id,'in preparation')
+		await orderViewModel.cancelOrder()
+		.then(()=> expect(true).toBeFalsy())
+		.catch(()=>expect(orderViewModel.hasActiveOrder()).toBeTruthy());
+		expect(
+			orderViewModel.getOrder() != null &&
+				orderViewModel.getOrder()?.id === orderAtServer.id
+		).toBeTruthy();
+	});
 
 	it('cancel order fails and order doesnt removed when received false response from server', async () => {
 		mockGetGuestOrder.mockImplementation(() =>mockMakePromise(orderAtServer));
@@ -201,6 +216,7 @@ describe('cancel order tests', () => {
 				orderViewModel.getOrder()?.id === orderAtServer.id
 		).toBeTruthy();
 	});
+	
 });
 
 describe('update order status tests', () => {
@@ -299,7 +315,3 @@ describe('submit review tests', () => {
 			.catch(() => expect(orderViewModel.hasActiveOrder()).toBeTruthy());
 	});
 });
-
-/**
- @todo: add waiters lcoations tests
-**/

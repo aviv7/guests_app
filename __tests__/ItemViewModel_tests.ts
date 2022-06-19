@@ -40,20 +40,3 @@ describe('Constructor', () => {
         expect(JSON.stringify(itemViewModel.getItemById('1')) === JSON.stringify (items[0])).toBeTruthy();
 	});
 });
-
-// const mockGetMyOrders = jest
-// 	.fn()
-// 	.mockImplementation(() => mockMakePromise(order1));
-
-// const requestsMock = jest.mock('../src/networking/Requests', () => {
-// 	return jest.fn().mockImplementation(() => {
-// 		return {
-// 			getMyOrders: () => mockGetMyOrders
-
-// 			// getGuestLocation: () =>
-// 			// 	mockMakePromise<Location>(mockGuestLocation),
-// 			// orderArrived: () => {},
-// 			// login: () => mockMakePromise('id'),
-// 		};
-// 	});
-// });
