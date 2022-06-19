@@ -37,7 +37,9 @@ const MapMarkersController = observer(({style}: MapMarkerControllerProps) => {
 	const personalMarker = createGuestMarker(myLocationViewModel.getLocation());
 
 	//Waiters Markers
-	const waiterMarkers = orderViewModel.getWaitersLocations().map(waiterLocation => 
+	const waiterMarkers = orderViewModel.getWaitersLocations()
+	.filter(waiterLocation => waiterLocation.mapID === myLocationViewModel.getLocation()?.mapID)
+	.map(waiterLocation => 
 		createWaiterMarker(waiterLocation));
 
 	const allMarkers = waiterMarkers.concat([personalMarker]);

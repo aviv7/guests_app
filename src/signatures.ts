@@ -38,5 +38,5 @@ export interface GuestNotificationHandler {
 		waiterID: WaiterID,
 		waiterLocation: Location
 	) => void;
-	orderStatusChange: (orderId: string, status: OrderStatus) => void;
+	changeOrderStatus: (orderID: string, status: OrderStatus) => void;
 }
