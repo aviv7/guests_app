@@ -13,6 +13,8 @@ const OrderController = observer((_props: OrderControllerProps) => {
 	const itemViewModel = useContext(itemsContext);
 	const locationViewModel = useContext(MyLocationContext);
 
+	const [isInCreateOrder, setIsInCreateOrder] = useState(false);
+
 	async function SendOrderToServer() {
 
 		await orderViewModel
@@ -22,6 +24,7 @@ const OrderController = observer((_props: OrderControllerProps) => {
 					console.log('order created with order id: ' + createdOrder.id);
 					Alert.alert("Order Created Succesfully!")
 					startWaitingForOrder();
+					setIsInCreateOrder(false)
 				})
 			.catch(err =>{
 					let msg = 'failed to create order due to:' 
@@ -33,6 +36,7 @@ const OrderController = observer((_props: OrderControllerProps) => {
 					Alert.alert(
 						msg,description
 					)
+					setIsInCreateOrder(false)
 				}
 			);
 	}
@@ -119,6 +123,8 @@ const OrderController = observer((_props: OrderControllerProps) => {
 			clearOrder = {clearOrder}
 			submitReview={(openText: string, rating:number)=> orderViewModel.submitReview(openText,rating)}
 			removeFinishedOrder={removeFinishedOrder}
+			isInCreateOrder = {isInCreateOrder}
+			setInCreateOrder = {setIsInCreateOrder}
 		/>
 	);
 });

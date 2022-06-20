@@ -33,6 +33,8 @@ type OrderPageViewProps = {
 	clearOrder: () => void;
 	submitReview: (openText: string, rating: number) => void;
 	removeFinishedOrder: () => void;
+	isInCreateOrder: boolean;
+	setInCreateOrder: (value: boolean) => void;
 };
 
 export const OrderView = observer((props: OrderPageViewProps) => {
@@ -164,7 +166,11 @@ export const OrderView = observer((props: OrderPageViewProps) => {
 								<Button
 									title='Submit Order'
 									onPress={() => {
-										props.SendOrderToServer();
+										if(!props.isInCreateOrder)
+										{
+											props.setInCreateOrder(true)
+											props.SendOrderToServer();
+										}
 									}}/>
 								<View style={styles.space} />
 								<Button
